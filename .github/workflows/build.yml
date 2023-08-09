@@ -1,0 +1,59 @@
+name: Build pbuilder chroots
+on:
+  - push
+  - workflow_dispatch
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  metadata:
+    name: Gather build metadata
+    runs-on: ubuntu-22.04
+
+    outputs:
+      baseurl: ${{ steps.metadata.outputs.baseurl }}
+      matrix: ${{ steps.metadata.outputs.matrix }}
+
+    steps:
+      - name: Construct pbuilder-chroots base URL
+        id: metadata
+        run: |
+          tag="$(
+            curl \
+              --silent \
+              --include \
+              https://github.com/rafaelmartins/pbuilder-chroots/releases/latest \
+            | sed -n '/^location/ s,.*/\([a-z0-9-]*\)[^/]*$,\1,p'
+          )"
+
+          baseurl="https://github.com/rafaelmartins/pbuilder-chroots/releases/download/${tag}"
+          echo "baseurl=${baseurl}" >> $GITHUB_OUTPUT
+
+          matrix="$(
+            curl \
+              --silent \
+              --location \
+              "${baseurl}/DISTROS.json"
+          )"
+          echo "matrix=${matrix}" >> $GITHUB_OUTPUT
+
+  build:
+    name: Build .deb packages for ${{ matrix.distro }}
+    runs-on: ubuntu-22.04
+    needs: metadata
+
+    strategy:
+      matrix: ${{ fromJson(needs.metadata.outputs.matrix) }}
+
+    steps:
+      - name: Debug
+        run: echo ${{ matrix.distro }}
