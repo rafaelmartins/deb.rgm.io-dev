@@ -24,7 +24,7 @@ jobs:
       matrix: ${{ steps.metadata.outputs.matrix }}
 
     steps:
-      - name: Construct pbuilder-chroots base URL
+      - name: Construct pbuilder-chroots base URL and matrix
         id: metadata
         run: |
           tag="$(
@@ -52,7 +52,7 @@ jobs:
     needs: metadata
 
     strategy:
-      matrix: ${{ fromJson(needs.metadata.outputs.matrix) }}
+      matrix: ${{ fromJSON(needs.metadata.outputs.matrix) }}
 
     steps:
       - name: Debug
