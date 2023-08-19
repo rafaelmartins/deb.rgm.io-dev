@@ -51,10 +51,9 @@ jobs:
           echo "matrix=${matrix}" >> $GITHUB_OUTPUT
 
   build:
-    name: Build .deb packages for ${{ matrix.build_id }}
+    name: "Build: ${{ matrix.build_id }}"
     runs-on: ubuntu-22.04
-    needs:
-      - metadata
+    needs: metadata
 
     strategy:
       matrix: ${{ fromJSON(needs.metadata.outputs.matrix) }}
