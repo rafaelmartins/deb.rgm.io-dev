@@ -7,6 +7,8 @@ if [[ $# -ne 2 ]]; then
     exit 2
 fi
 
+dir="$(dirname "${0}")"
+
 version="$(
     curl \
         --silent \
@@ -18,7 +20,7 @@ version="$(
 deb_version="$(
     grep \
         "(${version}" \
-        blogc/debian/changelog \
+        "${dir}/debian/changelog" \
     | cut -d\( -f2 \
     | cut -d\) -f1 \
     | cut -d~ -f1 \
