@@ -20,40 +20,45 @@ jobs:
     runs-on: ubuntu-22.04
 
     outputs:
-      baseurl: ${{ steps.metadata.outputs.baseurl }}
-      matrix: ${{ steps.metadata.outputs.matrix }}
+      baseurl: ${{ steps.pbuilder-chroots.outputs.baseurl }}
+      matrix: ${{ steps.matrix.outputs.matrix }}
 
     steps:
-      - name: Construct pbuilder-chroots base URL and matrix
-        id: metadata
-        run: |
-          tag="$(
-            curl \
-              --silent \
-              --include \
-              https://github.com/rafaelmartins/pbuilder-chroots/releases/latest \
-            | sed -n '/^location/ s,.*/\([a-z0-9-]*\)[^/]*$,\1,p'
-          )"
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          path: src
 
-          baseurl="https://github.com/rafaelmartins/pbuilder-chroots/releases/download/${tag}"
+      - name: Check out repositories
+        uses: actions/checkout@v3
+        with:
+          ref: repos
+          path: repos
+
+      - name: Install dependencies
+        run: sudo apt install -y jq
+
+      - name: Detect available pbuilder-chroots
+        id: pbuilder-chroots
+        run: |
+          baseurl="$(./src/.scripts/pbuilder-chroots_baseurl.sh)"
           echo "baseurl=${baseurl}" >> $GITHUB_OUTPUT
 
-          matrix="$(
-            curl \
-              --silent \
-              --location \
-              "${baseurl}/DISTROS.json"
-          )"
+      - name: Detect repositories to build
+        id: matrix
+        run: |
+          matrix="$(./src/.scripts/repositories_matrix.sh ./src ./repos)"
           echo "matrix=${matrix}" >> $GITHUB_OUTPUT
 
   build:
     name: Build .deb packages for ${{ matrix.distro }}
     runs-on: ubuntu-22.04
-    needs: metadata
+    needs:
+      - metadata
 
     strategy:
       matrix: ${{ fromJSON(needs.metadata.outputs.matrix) }}
 
     steps:
       - name: Debug
-        run: echo ${{ matrix.distro }}
+        run: echo ${{ matrix.build_id }}
