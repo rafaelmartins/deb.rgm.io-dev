@@ -35,9 +35,6 @@ jobs:
           ref: repos
           path: repos
 
-      - name: Install dependencies
-        run: sudo apt install -y jq
-
       - name: Detect available pbuilder-chroots
         id: pbuilder-chroots
         run: |
