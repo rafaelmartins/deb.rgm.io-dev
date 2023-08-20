@@ -42,11 +42,11 @@ jobs:
           echo "baseurl=${baseurl}" >> $GITHUB_OUTPUT
           echo "baseurl=${baseurl}" >> $GITHUB_ENV
 
-      - name: Detect repositories to build
+      - name: Generate build matrixes
         id: matrix
         run: |
-          matrix="$(./src/.scripts/repositories_matrix.sh ./src ./repos "${baseurl}")"
-          echo "matrix=${matrix}" >> $GITHUB_OUTPUT
+          build_ids="$(./src/.scripts/build-ids_matrix.sh ./src ./repos "${baseurl}")"
+          echo "build_ids=${build_ids}" >> $GITHUB_OUTPUT
 
   build:
     name: "Build: ${{ matrix.build_id }}"
