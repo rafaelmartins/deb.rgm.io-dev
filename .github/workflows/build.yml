@@ -43,11 +43,12 @@ jobs:
         run: |
           baseurl="$(./src/.scripts/pbuilder-chroots_baseurl.sh)"
           echo "baseurl=${baseurl}" >> $GITHUB_OUTPUT
+          echo "baseurl=${baseurl}" >> $GITHUB_ENV
 
       - name: Detect repositories to build
         id: matrix
         run: |
-          matrix="$(./src/.scripts/repositories_matrix.sh ./src ./repos)"
+          matrix="$(./src/.scripts/repositories_matrix.sh ./src ./repos "${baseurl}")"
           echo "matrix=${matrix}" >> $GITHUB_OUTPUT
 
   build:
