@@ -21,7 +21,7 @@ jobs:
 
     outputs:
       baseurl: ${{ steps.pbuilder-chroots.outputs.baseurl }}
-      matrix: ${{ steps.matrix.outputs.matrix }}
+      build_ids: ${{ steps.matrix.outputs.build_ids }}
 
     steps:
       - name: Check out code
@@ -54,7 +54,7 @@ jobs:
     needs: metadata
 
     strategy:
-      matrix: ${{ fromJSON(needs.metadata.outputs.matrix) }}
+      matrix: ${{ fromJSON(needs.metadata.outputs.build_ids) }}
 
     steps:
       - name: Debug
