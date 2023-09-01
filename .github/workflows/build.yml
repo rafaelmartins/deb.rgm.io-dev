@@ -50,12 +50,8 @@ jobs:
         id: matrix
         run: |
           metadata="$(./src/.scripts/metadata.sh ./src ./repos "${baseurl}")"
-
-          sources="$(echo "${metadata}" | jq -cM '{"source": .source}')"
-          echo "sources=${sources}" >> $GITHUB_OUTPUT
-
-          build_ids="$(echo "${metadata}" | jq -cM '{"build_id": .build_id}')"
-          echo "build_ids=${build_ids}" >> $GITHUB_OUTPUT
+          echo "sources=$(echo "${metadata}" | jq -cM '{"source": .source}')" >> $GITHUB_OUTPUT
+          echo "build_ids=$(echo "${metadata}" | jq -cM '{"build_id": .build_id}')" >> $GITHUB_OUTPUT
 
   sources:
     name: "Sources"
@@ -87,6 +83,17 @@ jobs:
           ref: ${{ steps.metadata.outputs.ref }}
           path: ${{ steps.metadata.outputs.gh_repo }}
           fetch-depth: 0
+
+      - name: Generate source
+        id: source
+        working-directory: ${{ steps.metadata.outputs.gh_repo }}
+        run: |
+          mkdir -p ../.output
+          "../src/${{ steps.metadata.outputs.repo }}/source.sh" ../.output
+          echo "version=$(cat ../.output/VERSION)" >> $GITHUB_OUTPUT
+
+      - name: Debug
+        run: ls .output
 
   build:
     name: "Build"
