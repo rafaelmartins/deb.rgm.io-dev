@@ -55,8 +55,8 @@ jobs:
           deb_repos="$(echo "${build_ids}" | jq -cM '{"deb_repo": .build_id | map(split(" ") | .[0]) | unique}')"
           echo "deb_repos=${deb_repos}" >> $GITHUB_OUTPUT
 
-  orig:
-    name: "Generate orig"
+  sources:
+    name: "Sources"
     runs-on: ubuntu-22.04
     needs:
       - metadata
@@ -73,7 +73,7 @@ jobs:
     runs-on: ubuntu-22.04
     needs:
       - metadata
-      - orig
+      - sources
 
     strategy:
       matrix: ${{ fromJSON(needs.metadata.outputs.build_ids) }}

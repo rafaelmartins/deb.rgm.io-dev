@@ -87,14 +87,16 @@ function github_version() {
 
 
 function github_hash() {
-    local head_hash="$(
-        git \
-            ls-remote \
-            https://github.com/$(github_repo "${1}").git \
-            HEAD
-    )"
+    git \
+        ls-remote \
+        https://github.com/$(github_repo "${1}").git \
+        HEAD \
+    | cut -d$'\t' -f1
+}
 
-    echo "${head_hash:0:4}"
+
+function short_hash() {
+    echo "${1:0:4}"
 }
 
 
@@ -120,18 +122,19 @@ for repo in "${repos[@]}"; do
     chl_version_rev="$(changelog_version_rev "${repo}")"
     gh_version="$(github_version "${repo}-snapshot")"
     gh_hash="$(github_hash "${repo}-snapshot")"
+    gh_short_hash="$(short_hash "${gh_hash}")"
 
     for distro in "${distros[@]}"; do
         variant="$(echo "${distro}" | cut -d_ -f2)"
 
         # release repository
         if dpkg --compare-versions "${chl_version_rev}" gt "$(repo_version_rev "${repo}" "${variant}")"; then
-            matrix+=("${repo} ${distro}")
+            matrix+=("${repo} ${distro} $(github_repo "${repo}") v$(echo "${chl_version_rev}" | strip_revision)")
         fi
 
         # snapshot repository
-        if [[ "$(repo_version_rev "${repo}-snapshot" "${variant}" | strip_revision)" != "${gh_version}."[0-9]*"-${gh_hash}" ]]; then
-            matrix+=("${repo}-snapshot ${distro}")
+        if [[ "$(repo_version_rev "${repo}-snapshot" "${variant}" | strip_revision)" != "${gh_version}."[0-9]*"-${gh_short_hash}" ]]; then
+            matrix+=("${repo}-snapshot ${distro} $(github_repo "${repo}") ${gh_hash}")
         fi
 
     done
