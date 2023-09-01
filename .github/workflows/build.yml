@@ -70,10 +70,10 @@ jobs:
       - name: Split metadata
         id: metadata
         run: |
-          echo "name=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f1)" >> GITHUB_OUTPUT
-          echo "repository=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f2)" >> GITHUB_OUTPUT
-          echo "repository_name=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f2 | cut -d/ -f2)" >> GITHUB_OUTPUT
-          echo "ref=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f2)" >> GITHUB_OUTPUT
+          echo "name=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+          echo "repository=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f2)" >> $GITHUB_OUTPUT
+          echo "repository_name=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f2 | cut -d/ -f2)" >> $GITHUB_OUTPUT
+          echo "ref=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f2)" >> $GITHUB_OUTPUT
 
       - name: Check out code
         uses: actions/checkout@v3
@@ -86,12 +86,6 @@ jobs:
           repository: ${{ steps.metadata.outputs.repository }}
           ref: ${{ steps.metadata.outputs.ref }}
           path: ${{ steps.metadata.outputs.repository_name }}
-
-      - name: Debug
-        run: |
-          echo repository: ${{ steps.metadata.outputs.repository }}
-          echo ref: ${{ steps.metadata.outputs.ref }}
-          echo path: ${{ steps.metadata.outputs.repository_name }}
 
   build:
     name: "Build"
