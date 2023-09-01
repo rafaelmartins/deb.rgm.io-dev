@@ -50,10 +50,12 @@ jobs:
         id: matrix
         run: |
           build_ids="$(./src/.scripts/build-ids_matrix.sh ./src ./repos "${baseurl}")"
-          echo "build_ids=${build_ids}" >> $GITHUB_OUTPUT
 
-          deb_repos="$(echo "${build_ids}" | jq -cM '{"deb_repo": .build_id | map(split(" ") | .[0]) | unique}')"
+          deb_repos="$(echo "${build_ids}" | jq -cM '{"deb_repo": .build_id | map(split(" ") | [.[0,2,3]] | join(" ")) | unique}')"
           echo "deb_repos=${deb_repos}" >> $GITHUB_OUTPUT
+
+          build_ids="$(echo "${build_ids}" | jq -cM '{"deb_repo": .build_id | map(split(" ") | [.[0,1]] | join(" "))}')"
+          echo "build_ids=${build_ids}" >> $GITHUB_OUTPUT
 
   sources:
     name: "Sources"
