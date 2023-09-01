@@ -11,18 +11,20 @@ fi
 ./configure --disable-silent-rules
 make dist-xz
 
-dir="${1:-.}"
-mv blogc-*.tar.xz "${dir}/"
+version="$(
+    find \
+        . \
+        -type f \
+        -name blogc-\*.tar.xz \
+    | head -n 1 \
+    | rev \
+    | cut -d/ -f1 \
+    | rev \
+    | sed \
+        -e 's/^blogc-//' \
+        -e 's/\.tar\.xz$//'
+)"
 
-find \
-    "${dir}" \
-    -type f \
-    -name blogc-\*.tar.xz \
-| head -n 1 \
-| rev \
-| cut -d/ -f1 \
-| rev \
-| sed \
-    -e 's/^blogc-//' \
-    -e 's/\.tar\.xz$//' \
-> "${dir}/VERSION"
+dir="${1:-.}"
+echo "${version}" > "${dir}/VERSION"
+mv blogc-*.tar.xz "${dir}/blogc_${version}.orig.tar.xz"
