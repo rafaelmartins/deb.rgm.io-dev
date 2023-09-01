@@ -70,10 +70,10 @@ jobs:
       - name: Split metadata
         id: metadata
         run: |
-          echo "repo=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
-          echo "gh_fullrepo=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f2)" >> $GITHUB_OUTPUT
-          echo "gh_repo=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f2 | cut -d/ -f2)" >> $GITHUB_OUTPUT
-          echo "ref=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f3)" >> $GITHUB_OUTPUT
+          echo "repo=$(echo ${{ matrix.source }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+          echo "gh_fullrepo=$(echo ${{ matrix.source }} | cut -d' ' -f2)" >> $GITHUB_OUTPUT
+          echo "gh_repo=$(echo ${{ matrix.source }} | cut -d' ' -f2 | cut -d/ -f2)" >> $GITHUB_OUTPUT
+          echo "ref=$(echo ${{ matrix.source }} | cut -d' ' -f3)" >> $GITHUB_OUTPUT
 
       - name: Check out code
         uses: actions/checkout@v3
@@ -83,9 +83,9 @@ jobs:
       - name: Check out source repository
         uses: actions/checkout@v3
         with:
-          repository: ${{ steps.metadata.outputs.repository }}
+          repository: ${{ steps.metadata.outputs.gh_fullrepo }}
           ref: ${{ steps.metadata.outputs.ref }}
-          path: ${{ steps.metadata.outputs.repository_name }}
+          path: ${{ steps.metadata.outputs.gh_repo }}
           fetch-depth: 0
 
   build:
