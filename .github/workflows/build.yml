@@ -87,6 +87,12 @@ jobs:
           ref: ${{ steps.split.outputs.ref }}
           path: ${{ steps.split.outputs.repository_name }}
 
+      - name: Debug
+        run: |
+          echo repository: ${{ steps.split.outputs.repository }}
+          echo ref: ${{ steps.split.outputs.ref }}
+          echo path: ${{ steps.split.outputs.repository_name }}
+
   build:
     name: "Build"
     runs-on: ubuntu-22.04
