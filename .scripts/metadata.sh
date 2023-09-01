@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -Eeo pipefail
+set -Eeuo pipefail
 
 # FIXME: support epoch?
 
@@ -38,7 +38,7 @@ function repo_version_rev() {
         | sort -u
     )
 
-    if [[ ${#versions[@]} -gt 1 ]]; then
+    if [[ -n "${versions[@]}" ]] && [[ ${#versions[@]} -gt 1 ]]; then
         die "more than one version found in repository: ${1}"
     fi
 
@@ -117,9 +117,12 @@ for f in $(find "${srcdir}" -type d -name debian); do
     repos+=("$(basename "$(dirname "${f}")")")
 done
 
-matrix=()
+build_ids=()
+sources=()
+
 for repo in "${repos[@]}"; do
     chl_version_rev="$(changelog_version_rev "${repo}")"
+    chl_version="$(echo "${chl_version_rev}" | strip_revision)"
     gh_version="$(github_version "${repo}-snapshot")"
     gh_hash="$(github_hash "${repo}-snapshot")"
     gh_short_hash="$(short_hash "${gh_hash}")"
@@ -129,19 +132,20 @@ for repo in "${repos[@]}"; do
 
         # release repository
         if dpkg --compare-versions "${chl_version_rev}" gt "$(repo_version_rev "${repo}" "${variant}")"; then
-            matrix+=("${repo} ${distro} $(github_repo "${repo}") v$(echo "${chl_version_rev}" | strip_revision)")
+            build_ids+=("${repo} ${distro}")
+            sources+=("${repo} $(github_repo "${repo}") v${chl_version}")
         fi
 
         # snapshot repository
         if [[ "$(repo_version_rev "${repo}-snapshot" "${variant}" | strip_revision)" != "${gh_version}."[0-9]*"-${gh_short_hash}" ]]; then
-            matrix+=("${repo}-snapshot ${distro} $(github_repo "${repo}") ${gh_hash}")
+            build_ids+=("${repo}-snapshot ${distro}")
+            sources+=("${repo}-snapshot $(github_repo "${repo}") ${gh_hash}")
         fi
-
     done
 done
 
 jq \
     -cnM \
-    '{"build_id": $ARGS.positional}' \
-    --args \
-    "${matrix[@]}"
+    --argjson buildids "$(jq -cnM '$ARGS.positional' --args "${build_ids[@]}")" \
+    --argjson sources "$(jq -cnM '$ARGS.positional | unique' --args "${sources[@]}")" \
+    '{"build_id": $buildids, "source": $sources}'

@@ -22,7 +22,7 @@ jobs:
     outputs:
       baseurl: ${{ steps.pbuilder-chroots.outputs.baseurl }}
       build_ids: ${{ steps.matrix.outputs.build_ids }}
-      deb_repos: ${{ steps.matrix.outputs.deb_repos }}
+      sources: ${{ steps.matrix.outputs.sources }}
 
     steps:
       - name: Check out code
@@ -49,12 +49,12 @@ jobs:
       - name: Generate build matrixes
         id: matrix
         run: |
-          build_ids="$(./src/.scripts/build-ids_matrix.sh ./src ./repos "${baseurl}")"
+          metadata="$(./src/.scripts/metadata.sh ./src ./repos "${baseurl}")"
 
-          deb_repos="$(echo "${build_ids}" | jq -cM '{"deb_repo": .build_id | map(split(" ") | [.[0,2,3]] | join(" ")) | unique}')"
-          echo "deb_repos=${deb_repos}" >> $GITHUB_OUTPUT
+          sources="$(echo "${metadata}" | jq -cM '{"source": .source}')"
+          echo "sources=${sources}" >> $GITHUB_OUTPUT
 
-          build_ids="$(echo "${build_ids}" | jq -cM '{"build_ids": .build_id | map(split(" ") | [.[0,1]] | join(" "))}')"
+          build_ids="$(echo "${metadata}" | jq -cM '{"build_id": .build_id}')"
           echo "build_ids=${build_ids}" >> $GITHUB_OUTPUT
 
   sources:
@@ -64,15 +64,15 @@ jobs:
       - metadata
 
     strategy:
-      matrix: ${{ fromJSON(needs.metadata.outputs.deb_repos) }}
+      matrix: ${{ fromJSON(needs.metadata.outputs.sources) }}
 
     steps:
       - name: Split metadata
         id: metadata
         run: |
-          echo "name=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
-          echo "repository=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f2)" >> $GITHUB_OUTPUT
-          echo "repository_name=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f2 | cut -d/ -f2)" >> $GITHUB_OUTPUT
+          echo "repo=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+          echo "gh_fullrepo=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f2)" >> $GITHUB_OUTPUT
+          echo "gh_repo=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f2 | cut -d/ -f2)" >> $GITHUB_OUTPUT
           echo "ref=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f3)" >> $GITHUB_OUTPUT
 
       - name: Check out code
