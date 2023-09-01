@@ -93,8 +93,11 @@ jobs:
           "../src/${{ steps.metadata.outputs.repodir }}/source.sh" ../.output
           echo "version=$(cat ../.output/VERSION)" >> $GITHUB_OUTPUT
 
-      - name: Debug
-        run: ls .output
+      - name: Upload source artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.metadata.outputs.repo }}
+          path: .output
 
   build:
     name: "Build"
