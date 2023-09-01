@@ -86,6 +86,7 @@ jobs:
           repository: ${{ steps.metadata.outputs.repository }}
           ref: ${{ steps.metadata.outputs.ref }}
           path: ${{ steps.metadata.outputs.repository_name }}
+          fetch-depth: 0
 
   build:
     name: "Build"
