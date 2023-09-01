@@ -73,7 +73,7 @@ jobs:
           echo "name=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
           echo "repository=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f2)" >> $GITHUB_OUTPUT
           echo "repository_name=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f2 | cut -d/ -f2)" >> $GITHUB_OUTPUT
-          echo "ref=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f2)" >> $GITHUB_OUTPUT
+          echo "ref=$(echo ${{ matrix.deb_repo }} | cut -d' ' -f3)" >> $GITHUB_OUTPUT
 
       - name: Check out code
         uses: actions/checkout@v3
