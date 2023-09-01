@@ -67,6 +67,7 @@ jobs:
         id: metadata
         run: |
           echo "repo=$(echo ${{ matrix.source }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+          echo "repodir=$(echo ${{ matrix.source }} | cut -d' ' -f1 | sed -e 's/-snapshot$//')" >> $GITHUB_OUTPUT
           echo "gh_fullrepo=$(echo ${{ matrix.source }} | cut -d' ' -f2)" >> $GITHUB_OUTPUT
           echo "gh_repo=$(echo ${{ matrix.source }} | cut -d' ' -f2 | cut -d/ -f2)" >> $GITHUB_OUTPUT
           echo "ref=$(echo ${{ matrix.source }} | cut -d' ' -f3)" >> $GITHUB_OUTPUT
@@ -89,7 +90,7 @@ jobs:
         working-directory: ${{ steps.metadata.outputs.gh_repo }}
         run: |
           mkdir -p ../.output
-          "../src/${{ steps.metadata.outputs.repo }}/source.sh" ../.output
+          "../src/${{ steps.metadata.outputs.repodir }}/source.sh" ../.output
           echo "version=$(cat ../.output/VERSION)" >> $GITHUB_OUTPUT
 
       - name: Debug
