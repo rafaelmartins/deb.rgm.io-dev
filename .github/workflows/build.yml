@@ -36,6 +36,9 @@ jobs:
           ref: repos
           path: repos
 
+      - name: Install dependencies
+        run: sudo apt install -y grep-dctrl
+
       - name: Detect available pbuilder-chroots
         id: pbuilder-chroots
         run: |
