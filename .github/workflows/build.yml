@@ -115,6 +115,7 @@ jobs:
         run: |
           echo "repo=$(echo ${{ matrix.build_id }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
           echo "repodir=$(echo ${{ matrix.build_id }} | cut -d' ' -f1 | sed -e 's/-snapshot$//')" >> $GITHUB_OUTPUT
+          echo "distro=$(echo ${{ matrix.build_id }} | cut -d' ' -f2)" >> $GITHUB_OUTPUT
 
       - name: Check out code
         uses: actions/checkout@v3
@@ -125,6 +126,12 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: source-${{ steps.metadata.outputs.repo }}
+
+      - name: Download pbuilder-chroot
+        run: |
+          ./src/.scripts/pbuilder-chroots_download.sh \
+            "${{ needs.metadata.outputs.baseurl }}" \
+            "${{ steps.metadata.outputs.distro }}"
 
       - name: Debug
         run: echo ${{ matrix.build_id }}
