@@ -63,7 +63,7 @@ jobs:
       matrix: ${{ fromJSON(needs.metadata.outputs.sources) }}
 
     steps:
-      - name: Split metadata
+      - name: Parse metadata
         id: metadata
         run: |
           echo "repo=$(echo ${{ matrix.source }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
@@ -96,7 +96,7 @@ jobs:
       - name: Upload source artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ steps.metadata.outputs.repo }}
+          name: source-${{ steps.metadata.outputs.repo }}
           path: .output
 
   build:
@@ -110,5 +110,21 @@ jobs:
       matrix: ${{ fromJSON(needs.metadata.outputs.build_ids) }}
 
     steps:
+      - name: Parse metadata
+        id: metadata
+        run: |
+          echo "repo=$(echo ${{ matrix.build_id }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+          echo "repodir=$(echo ${{ matrix.build_id }} | cut -d' ' -f1 | sed -e 's/-snapshot$//')" >> $GITHUB_OUTPUT
+
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          path: src
+
+      - name: Download source artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: source-${{ steps.metadata.outputs.repo }}
+
       - name: Debug
         run: echo ${{ matrix.build_id }}
