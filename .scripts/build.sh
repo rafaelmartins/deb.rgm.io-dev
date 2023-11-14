@@ -15,7 +15,7 @@ if [[ $# -ne 5 ]]; then
 fi
 
 if [[ "x${CI:-}" = "xtrue" ]]; then
-    sudo apt install -y devscripts
+    sudo apt install -y devscripts &> /dev/null
 fi
 
 repo="${1}"
