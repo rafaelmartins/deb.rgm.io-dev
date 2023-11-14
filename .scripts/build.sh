@@ -15,7 +15,9 @@ if [[ $# -ne 5 ]]; then
 fi
 
 if [[ "x${CI:-}" = "xtrue" ]]; then
-    sudo apt install -y devscripts equivs &> /dev/null
+    sudo sed -i 's/^# deb-src/deb-src/' /etc/apt/sources.list 1>&2
+    sudo apt update 1>&2
+    sudo apt install -y devscripts equivs 1>&2
 fi
 
 repo="${1}"

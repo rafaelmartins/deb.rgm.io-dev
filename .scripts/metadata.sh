@@ -14,7 +14,7 @@ if [[ $# -ne 2 ]]; then
 fi
 
 if [[ "x${CI:-}" = "xtrue" ]]; then
-    sudo apt install -y dctrl-tools &> /dev/null
+    sudo apt install -y dctrl-tools 1>&2
 fi
 
 srcdir="${1}"
