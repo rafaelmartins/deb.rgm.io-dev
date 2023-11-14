@@ -13,6 +13,10 @@ if [[ $# -ne 2 ]]; then
     die "invalid number of arguments"
 fi
 
+if [[ "x${CI:-}" = "xtrue" ]]; then
+    sudo apt install -y dctrl-tools
+fi
+
 srcdir="${1}"
 reposdir="${2}"
 

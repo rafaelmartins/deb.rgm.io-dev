@@ -14,6 +14,10 @@ if [[ $# -ne 5 ]]; then
     die "invalid number of arguments"
 fi
 
+if [[ "x${CI:-}" = "xtrue" ]]; then
+    sudo apt install -y devscripts
+fi
+
 repo="${1}"
 codename="${2}"
 source="$(realpath "${3}")"

@@ -35,9 +35,6 @@ jobs:
           ref: repos
           path: repos
 
-      - name: Install dependencies
-        run: sudo apt install -y dctrl-tools
-
       - name: Generate build matrixes
         id: matrix
         run: |
