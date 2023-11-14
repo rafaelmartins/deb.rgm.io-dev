@@ -1,4 +1,4 @@
-name: Build pbuilder chroots
+name: Build debian
 on:
   - push
   - workflow_dispatch
@@ -20,7 +20,6 @@ jobs:
     runs-on: ubuntu-22.04
 
     outputs:
-      baseurl: ${{ steps.pbuilder-chroots.outputs.baseurl }}
       build_ids: ${{ steps.matrix.outputs.build_ids }}
       sources: ${{ steps.matrix.outputs.sources }}
 
@@ -37,24 +36,17 @@ jobs:
           path: repos
 
       - name: Install dependencies
-        run: sudo apt install -y grep-dctrl
-
-      - name: Detect available pbuilder-chroots
-        id: pbuilder-chroots
-        run: |
-          baseurl="$(./src/.scripts/pbuilder-chroots_baseurl.sh)"
-          echo "baseurl=${baseurl}" >> $GITHUB_OUTPUT
-          echo "baseurl=${baseurl}" >> $GITHUB_ENV
+        run: sudo apt install -y dctrl-tools
 
       - name: Generate build matrixes
         id: matrix
         run: |
-          metadata="$(./src/.scripts/metadata.sh ./src ./repos "${baseurl}")"
+          metadata="$(./src/.scripts/metadata.sh ./src ./repos)"
           echo "sources=$(echo "${metadata}" | jq -cM '{"source": .source}')" >> $GITHUB_OUTPUT
           echo "build_ids=$(echo "${metadata}" | jq -cM '{"build_id": .build_id}')" >> $GITHUB_OUTPUT
 
   sources:
-    name: "Sources"
+    name: Sources
     runs-on: ubuntu-22.04
     needs:
       - metadata
@@ -89,18 +81,17 @@ jobs:
         id: source
         working-directory: ${{ steps.metadata.outputs.gh_repo }}
         run: |
-          mkdir -p ../.output
-          "../src/${{ steps.metadata.outputs.repodir }}/source.sh" ../.output
-          echo "version=$(cat ../.output/VERSION)" >> $GITHUB_OUTPUT
+          mkdir -p ../output
+          "../src/${{ steps.metadata.outputs.repodir }}/source.sh" ../output
 
       - name: Upload source artifacts
         uses: actions/upload-artifact@v3
         with:
           name: source-${{ steps.metadata.outputs.repo }}
-          path: .output
+          path: output
 
   build:
-    name: "Build"
+    name: Build
     runs-on: ubuntu-22.04
     needs:
       - metadata
@@ -114,8 +105,8 @@ jobs:
         id: metadata
         run: |
           echo "repo=$(echo ${{ matrix.build_id }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+          echo "codename=$(echo ${{ matrix.build_id }} | cut -d' ' -f2 | cut -d_ -f2)" >> $GITHUB_OUTPUT
           echo "repodir=$(echo ${{ matrix.build_id }} | cut -d' ' -f1 | sed -e 's/-snapshot$//')" >> $GITHUB_OUTPUT
-          echo "distro=$(echo ${{ matrix.build_id }} | cut -d' ' -f2)" >> $GITHUB_OUTPUT
 
       - name: Check out code
         uses: actions/checkout@v3
@@ -126,12 +117,25 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: source-${{ steps.metadata.outputs.repo }}
+          path: source
 
-      - name: Download pbuilder-chroot
+      - name: Locate source file
+        id: source
+        working-directory: source
         run: |
-          ./src/.scripts/pbuilder-chroots_download.sh \
-            "${{ needs.metadata.outputs.baseurl }}" \
-            "${{ steps.metadata.outputs.distro }}"
+          echo "source=./source/$(ls -1 *.orig.* | head -n 1)" >> $GITHUB_OUTPUT
 
-      - name: Debug
-        run: echo ${{ matrix.build_id }}
+      - name: Build
+        run: |
+          ./src/.scripts/build.sh \
+            "${{ steps.metadata.outputs.repo }}" \
+            "${{ steps.metadata.outputs.codename }}" \
+            "${{ steps.source.outputs.source }}" \
+            "${{ steps.metadata.outputs.repodir }}" \
+            ./output
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: package-${{ matrix.build_id }}
+          path: output

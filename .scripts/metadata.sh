@@ -9,18 +9,20 @@ function die() {
     exit 1
 }
 
-if [[ $# -ne 3 ]]; then
+if [[ $# -ne 2 ]]; then
     die "invalid number of arguments"
 fi
 
 srcdir="${1}"
 reposdir="${2}"
-baseurl="${3}"
+
+scriptdir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+rootdir="$(dirname "${scriptdir}")"
 
 
 function repo_version_rev() {
-    # we assume that every repo only contains only one package (splitted packages
-    # are fine), and that there's always a package with the repository name.
+    # we assume that every repo contains only one source package,
+    # named the same as the repo (with -snapshot suffix stripped).
 
     local -a versions
 
@@ -30,7 +32,7 @@ function repo_version_rev() {
         find \
             "${reposdir}/${1}/pool" \
             -type f \
-            -name "${1/-snapshot/}_*${2}_amd64.deb" \
+            -name "${1%%-snapshot}_*${2}_amd64.deb" \
         | rev \
         | cut -d_ -f2 \
         | rev \
@@ -47,7 +49,7 @@ function repo_version_rev() {
 
 
 function changelog_version_rev() {
-    local changelog="${srcdir}/${1/-snapshot/}/debian/changelog"
+    local changelog="${srcdir}/${1%%-snapshot}/debian/changelog"
 
     if [[ ! -f  "${changelog}" ]]; then
         die "changelog not found"
@@ -61,7 +63,7 @@ function changelog_version_rev() {
 
 
 function github_repo() {
-    local control="${srcdir}/${1/-snapshot/}/debian/control"
+    local control="${srcdir}/${1%%-snapshot}/debian/control"
 
     if [[ ! -f  "${control}" ]]; then
         die "control file not found"
@@ -108,7 +110,7 @@ function strip_revision() {
 
 
 distros=()
-for distro in $(curl --silent --location "${baseurl}/DISTROS"); do
+for distro in $(jq -crM ".distro[]" "${rootdir}/DISTROS.json"); do
     distros+=("${distro}")
 done
 
