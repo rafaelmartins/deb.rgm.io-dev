@@ -100,10 +100,10 @@ docker run \
             chown -R $(id -u):$(id -g) /build \
         "
 
-mkdir -p "${outdir}"
+mkdir -p "${outdir}/${repo}_${codename}"
 
 find \
     "${tmpdir}/build" \
     -maxdepth 1 \
     -type f \
-    -exec cp -- "{}" "${outdir}/" \;
+    -exec cp -- "{}" "${outdir}/${repo}_${codename}/" \;
