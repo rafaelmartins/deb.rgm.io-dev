@@ -87,7 +87,7 @@ jobs:
           "../src/${{ steps.metadata.outputs.repodir }}/source.sh" ../output
 
       - name: Reuse existing source if available
-        run: ./src/.scripts/build.sh output repos
+        run: ./src/.scripts/source.sh output repos
 
       - name: Upload source artifacts
         uses: actions/upload-artifact@v3
