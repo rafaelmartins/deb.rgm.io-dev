@@ -15,6 +15,7 @@ if [[ $# -ne 5 ]]; then
 fi
 
 if [[ "x${CI:-}" = "xtrue" ]]; then
+    sudo apt update 1>&2
     sudo apt install -y devscripts equivs 1>&2
 fi
 

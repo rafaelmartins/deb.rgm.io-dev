@@ -14,6 +14,7 @@ if [[ $# -ne 2 ]]; then
 fi
 
 if [[ "x${CI:-}" = "xtrue" ]]; then
+    sudo apt update 1>&2
     sudo apt install -y dctrl-tools 1>&2
 fi
 
