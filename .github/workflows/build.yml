@@ -66,6 +66,12 @@ jobs:
         with:
           path: src
 
+      - name: Check out repositories
+        uses: actions/checkout@v3
+        with:
+          ref: repos
+          path: repos
+
       - name: Check out source repository
         uses: actions/checkout@v3
         with:
@@ -75,11 +81,13 @@ jobs:
           fetch-depth: 0
 
       - name: Generate source
-        id: source
         working-directory: ${{ steps.metadata.outputs.gh_repo }}
         run: |
           mkdir -p ../output
           "../src/${{ steps.metadata.outputs.repodir }}/source.sh" ../output
+
+      - name: Reuse existing source if available
+        run: ../src/.scripts/build.sh output repos
 
       - name: Upload source artifacts
         uses: actions/upload-artifact@v3

@@ -15,8 +15,6 @@ if [[ $# -ne 5 ]]; then
 fi
 
 if [[ "x${CI:-}" = "xtrue" ]]; then
-    #sudo sed -i 's/^# deb-src/deb-src/' /etc/apt/sources.list 1>&2
-    #sudo apt update 1>&2
     sudo apt install -y devscripts equivs 1>&2
 fi
 
@@ -26,7 +24,7 @@ source="$(realpath "${3}")"
 repodir="$(realpath "${4}")"
 outdir="$(realpath "${5}")"
 
-scriptdir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+scriptdir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 
 image="$("${scriptdir}/distro-docker-image.sh" "${codename}")"
 
