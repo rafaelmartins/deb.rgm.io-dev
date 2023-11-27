@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NUM_ARGS=2
+NUM_ARGS=0
 DEPENDENCIES="ronn"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)/../.scripts"
