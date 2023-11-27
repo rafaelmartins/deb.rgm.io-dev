@@ -38,7 +38,7 @@ jobs:
         id: matrix
         run: |
           orig="$(./main/.scripts/discover-orig.sh ./main ./orig)"
-          echo "orig="${orig}" >> $GITHUB_OUTPUT
+          echo "orig=${orig}" >> $GITHUB_OUTPUT
 
   orig:
     name: Generate orig
