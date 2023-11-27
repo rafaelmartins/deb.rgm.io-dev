@@ -83,10 +83,10 @@ jobs:
         working-directory: ${{ steps.metadata.outputs.gh_repo }}
         run: |
           mkdir -p ../output
-          "../src/${{ steps.metadata.outputs.repodir }}/orig.sh" ../output
+          "../main/${{ steps.metadata.outputs.repodir }}/orig.sh" ../output
 
       # - name: Reuse existing source if available
-      #   run: ./src/.scripts/source.sh output repos
+      #   run: ./main/.scripts/source.sh output repos
 
       - name: Upload source artifacts
         uses: actions/upload-artifact@v3
