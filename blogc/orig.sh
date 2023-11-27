@@ -1,10 +1,12 @@
 #!/bin/bash
 
-NUM_ARGS=0
+NUM_ARGS=1
 DEPENDENCIES="ronn"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)/../.scripts"
 source "${SCRIPT_DIR}/utils.sh"
+
+OUTPUT_DIR="$(realpath "${1:-.}")"
 
 ./autogen.sh
 ./configure
@@ -24,6 +26,5 @@ version="$(
         -e 's/\.tar\.xz$//'
 )"
 
-dir="${1:-.}"
-echo "${version}" > "${dir}/VERSION"
-mv blogc-*.tar.xz "${dir}/blogc_${version}.orig.tar.xz"
+echo "${version}" > "${OUTPUT_DIR}/VERSION"
+mv blogc-*.tar.xz "${OUTPUT_DIR}/blogc_${version}.orig.tar.xz"
