@@ -1,28 +1,19 @@
 #!/bin/bash
 
-set -Eeuo pipefail
+NUM_ARGS=1
 
-function die() {
-    echo "error:" ${@} > /dev/stderr
-    exit 1
-}
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+source "${SCRIPT_DIR}/utils.sh"
 
-if [[ $# -ne 1 ]]; then
-    die "invalid number of arguments"
-fi
+CODENAME="${1}"
 
-codename="${1}"
-
-scriptdir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
-rootdir="$(dirname "${scriptdir}")"
-
-distro="$(jq -crM ".distro[] | select(contains(\"_${codename}_\"))" "${rootdir}/DISTROS.json")"
+distro="$(jq -crM ".distro[] | select(contains(\"_${CODENAME}_\"))" "${ROOT_DIR}/DISTROS.json")"
 if [[ -z "${distro}" ]]; then
     exit 1
 fi
 
 imagename="$(echo "${distro}" | cut -d_ -f1)"
-imagetag="${codename}"
+imagetag="${CODENAME}"
 
 if [[ "${imagename}" = "debian" ]]; then
     imagetag="${imagetag}-slim"

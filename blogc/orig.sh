@@ -1,14 +1,13 @@
 #!/bin/bash
 
-set -Eeuo pipefail
+NUM_ARGS=2
+DEPENDENCIES="ronn"
 
-if [[ "x${CI:-}" = "xtrue" ]]; then
-    # we need ronn to generate the manpages
-    sudo apt install -y ronn
-fi
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)/../.scripts"
+source "${SCRIPT_DIR}/utils.sh"
 
 ./autogen.sh
-./configure --disable-silent-rules
+./configure
 make dist-xz
 
 version="$(

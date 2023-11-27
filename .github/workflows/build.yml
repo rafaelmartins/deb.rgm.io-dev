@@ -15,62 +15,61 @@ defaults:
     shell: bash
 
 jobs:
-  metadata:
-    name: Gather build metadata
+  metadata-orig:
+    name: Discover orig metadata
     runs-on: ubuntu-22.04
 
     outputs:
-      build_ids: ${{ steps.matrix.outputs.build_ids }}
-      sources: ${{ steps.matrix.outputs.sources }}
+      orig: ${{ steps.matrix.outputs.orig }}
 
     steps:
       - name: Check out code
         uses: actions/checkout@v3
         with:
-          path: src
+          path: main
 
-      - name: Check out repositories
+      - name: Check out orig
         uses: actions/checkout@v3
         with:
-          ref: repos
-          path: repos
+          ref: orig
+          path: orig
 
-      - name: Generate build matrixes
+      - name: Generate orig matrix
         id: matrix
         run: |
-          metadata="$(./src/.scripts/metadata.sh ./src ./repos)"
-          echo "sources=$(echo "${metadata}" | jq -cM '{"source": .source}')" >> $GITHUB_OUTPUT
-          echo "build_ids=$(echo "${metadata}" | jq -cM '{"build_id": .build_id}')" >> $GITHUB_OUTPUT
+          orig="$(./main/.scripts/discover-orig.sh ./main ./orig)"
+          echo "orig="${orig}" >> $GITHUB_OUTPUT
 
-  sources:
-    name: Sources
+  orig:
+    name: Generate orig
     runs-on: ubuntu-22.04
     needs:
-      - metadata
+      - metadata-orig
 
     strategy:
-      matrix: ${{ fromJSON(needs.metadata.outputs.sources) }}
+      matrix:
+        orig: ${{ fromJSON(needs.metadata-orig.outputs.orig) }}
 
     steps:
       - name: Parse metadata
         id: metadata
         run: |
-          echo "repo=$(echo ${{ matrix.source }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
-          echo "repodir=$(echo ${{ matrix.source }} | cut -d' ' -f1 | sed -e 's/-snapshot$//')" >> $GITHUB_OUTPUT
-          echo "gh_fullrepo=$(echo ${{ matrix.source }} | cut -d' ' -f2)" >> $GITHUB_OUTPUT
-          echo "gh_repo=$(echo ${{ matrix.source }} | cut -d' ' -f2 | cut -d/ -f2)" >> $GITHUB_OUTPUT
-          echo "ref=$(echo ${{ matrix.source }} | cut -d' ' -f3)" >> $GITHUB_OUTPUT
+          echo "repo=$(echo ${{ matrix.orig }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+          echo "repodir=$(echo ${{ matrix.orig }} | cut -d' ' -f1 | sed -e 's/-snapshot$//')" >> $GITHUB_OUTPUT
+          echo "gh_fullrepo=$(echo ${{ matrix.orig }} | cut -d' ' -f2)" >> $GITHUB_OUTPUT
+          echo "gh_repo=$(echo ${{ matrix.orig }} | cut -d' ' -f2 | cut -d/ -f2)" >> $GITHUB_OUTPUT
+          echo "ref=$(echo ${{ matrix.orig }} | cut -d' ' -f3)" >> $GITHUB_OUTPUT
 
       - name: Check out code
         uses: actions/checkout@v3
         with:
-          path: src
+          path: main
 
-      - name: Check out repositories
+      - name: Check out orig
         uses: actions/checkout@v3
         with:
-          ref: repos
-          path: repos
+          ref: orig
+          path: orig
 
       - name: Check out source repository
         uses: actions/checkout@v3
@@ -80,14 +79,14 @@ jobs:
           path: ${{ steps.metadata.outputs.gh_repo }}
           fetch-depth: 0
 
-      - name: Generate source
+      - name: Generate orig
         working-directory: ${{ steps.metadata.outputs.gh_repo }}
         run: |
           mkdir -p ../output
-          "../src/${{ steps.metadata.outputs.repodir }}/source.sh" ../output
+          "../src/${{ steps.metadata.outputs.repodir }}/orig.sh" ../output
 
-      - name: Reuse existing source if available
-        run: ./src/.scripts/source.sh output repos
+      # - name: Reuse existing source if available
+      #   run: ./src/.scripts/source.sh output repos
 
       - name: Upload source artifacts
         uses: actions/upload-artifact@v3
@@ -95,52 +94,52 @@ jobs:
           name: source-${{ steps.metadata.outputs.repo }}
           path: output
 
-  build:
-    name: Build
-    runs-on: ubuntu-22.04
-    needs:
-      - metadata
-      - sources
+  # build:
+  #   name: Build
+  #   runs-on: ubuntu-22.04
+  #   needs:
+  #     - metadata
+  #     - sources
 
-    strategy:
-      matrix: ${{ fromJSON(needs.metadata.outputs.build_ids) }}
+  #   strategy:
+  #     matrix: ${{ fromJSON(needs.metadata.outputs.build_ids) }}
 
-    steps:
-      - name: Parse metadata
-        id: metadata
-        run: |
-          echo "repo=$(echo ${{ matrix.build_id }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
-          echo "codename=$(echo ${{ matrix.build_id }} | cut -d' ' -f2 | cut -d_ -f2)" >> $GITHUB_OUTPUT
-          echo "repodir=$(echo ${{ matrix.build_id }} | cut -d' ' -f1 | sed -e 's/-snapshot$//')" >> $GITHUB_OUTPUT
+  #   steps:
+  #     - name: Parse metadata
+  #       id: metadata
+  #       run: |
+  #         echo "repo=$(echo ${{ matrix.build_id }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+  #         echo "codename=$(echo ${{ matrix.build_id }} | cut -d' ' -f2 | cut -d_ -f2)" >> $GITHUB_OUTPUT
+  #         echo "repodir=$(echo ${{ matrix.build_id }} | cut -d' ' -f1 | sed -e 's/-snapshot$//')" >> $GITHUB_OUTPUT
 
-      - name: Check out code
-        uses: actions/checkout@v3
-        with:
-          path: src
+  #     - name: Check out code
+  #       uses: actions/checkout@v3
+  #       with:
+  #         path: src
 
-      - name: Download source artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: source-${{ steps.metadata.outputs.repo }}
-          path: source
+  #     - name: Download source artifacts
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: source-${{ steps.metadata.outputs.repo }}
+  #         path: source
 
-      - name: Locate source file
-        id: source
-        working-directory: source
-        run: |
-          echo "source=$(ls -1 *.orig.* | head -n 1)" >> $GITHUB_OUTPUT
+  #     - name: Locate source file
+  #       id: source
+  #       working-directory: source
+  #       run: |
+  #         echo "source=$(ls -1 *.orig.* | head -n 1)" >> $GITHUB_OUTPUT
 
-      - name: Build
-        run: |
-          ./src/.scripts/build.sh \
-            "${{ steps.metadata.outputs.repo }}" \
-            "${{ steps.metadata.outputs.codename }}" \
-            "./source/${{ steps.source.outputs.source }}" \
-            "./src/${{ steps.metadata.outputs.repodir }}" \
-            ./output
+  #     - name: Build
+  #       run: |
+  #         ./src/.scripts/build.sh \
+  #           "${{ steps.metadata.outputs.repo }}" \
+  #           "${{ steps.metadata.outputs.codename }}" \
+  #           "./source/${{ steps.source.outputs.source }}" \
+  #           "./src/${{ steps.metadata.outputs.repodir }}" \
+  #           ./output
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: package-${{ steps.metadata.outputs.repo }}-${{ steps.metadata.outputs.codename }}
-          path: output
+  #     - name: Upload build artifacts
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: package-${{ steps.metadata.outputs.repo }}-${{ steps.metadata.outputs.codename }}
+  #         path: output

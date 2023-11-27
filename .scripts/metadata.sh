@@ -9,7 +9,7 @@ function die() {
     exit 1
 }
 
-if [[ $# -ne 2 ]]; then
+if [[ $# -ne 3 ]]; then
     die "invalid number of arguments"
 fi
 
@@ -18,11 +18,26 @@ if [[ "x${CI:-}" = "xtrue" ]]; then
     sudo apt install -y dctrl-tools 1>&2
 fi
 
-srcdir="${1}"
-reposdir="${2}"
+maindir="${1}"
+origdir="${2}"
+debdir="${3}"
 
-scriptdir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+scriptdir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 rootdir="$(dirname "${scriptdir}")"
+
+
+function orig_version() {
+    if [[ $(ls -1 "${origdir}/${1}"/*.orig.tar.* | wc -l) -ne 1 ]]; then
+        die "orig source not valid"
+    fi
+
+    ls -1 "${origdir}/${1}"/*.orig.tar.* \
+    2> /dev/null \
+    | rev \
+    | cut -d. -f4- \
+    | rev \
+    | cut -d_ -f2
+}
 
 
 function repo_version_rev() {
@@ -35,9 +50,10 @@ function repo_version_rev() {
         versions+=(${f})
     done < <(
         find \
-            "${reposdir}/${1}/pool" \
+            "${debdir}/${1}/pool" \
             -type f \
             -name "${1%%-snapshot}_*${2}_amd64.deb" \
+        2> /dev/null \
         | rev \
         | cut -d_ -f2 \
         | rev \
@@ -54,7 +70,7 @@ function repo_version_rev() {
 
 
 function changelog_version_rev() {
-    local changelog="${srcdir}/${1%%-snapshot}/debian/changelog"
+    local changelog="${maindir}/${1%%-snapshot}/debian/changelog"
 
     if [[ ! -f  "${changelog}" ]]; then
         die "changelog not found"
@@ -68,7 +84,7 @@ function changelog_version_rev() {
 
 
 function github_repo() {
-    local control="${srcdir}/${1%%-snapshot}/debian/control"
+    local control="${maindir}/${1%%-snapshot}/debian/control"
 
     if [[ ! -f  "${control}" ]]; then
         die "control file not found"
@@ -120,7 +136,7 @@ for distro in $(jq -crM ".distro[]" "${rootdir}/DISTROS.json"); do
 done
 
 repos=()
-for f in $(find "${srcdir}" -type d -name debian); do
+for f in $(find "${maindir}" -type d -name debian); do
     repos+=("$(basename "$(dirname "${f}")")")
 done
 
@@ -135,16 +151,16 @@ for repo in "${repos[@]}"; do
     gh_short_hash="$(short_hash "${gh_hash}")"
 
     for distro in "${distros[@]}"; do
-        variant="$(echo "${distro}" | cut -d_ -f2)"
+        codename="$(echo "${distro}" | cut -d_ -f2)"
 
         # release repository
-        if dpkg --compare-versions "${chl_version_rev}" gt "$(repo_version_rev "${repo}" "${variant}")"; then
+        if dpkg --compare-versions "${chl_version_rev}" gt "$(repo_version_rev "${repo}" "${codename}")"; then
             build_ids+=("${repo} ${distro}")
             sources+=("${repo} $(github_repo "${repo}") v${chl_version}")
         fi
 
         # snapshot repository
-        if [[ "$(repo_version_rev "${repo}-snapshot" "${variant}" | strip_revision)" != "${gh_version}."[0-9]*"-${gh_short_hash}" ]]; then
+        if [[ "$(repo_version_rev "${repo}-snapshot" "${codename}" | strip_revision)" != "${gh_version}."[0-9]*"-${gh_short_hash}" ]]; then
             build_ids+=("${repo}-snapshot ${distro}")
             sources+=("${repo}-snapshot $(github_repo "${repo}") ${gh_hash}")
         fi

@@ -1,24 +1,21 @@
 #!/bin/bash
 
-set -Eeuo pipefail
+NUM_ARGS=1
 
-function die() {
-    echo "error:" ${@} > /dev/stderr
-    exit 1
-}
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+source "${SCRIPT_DIR}/utils.sh"
 
-if [[ $# -ne 1 ]]; then
-    die "invalid number of arguments"
+CODENAME="${1}"
+
+# FIXME: sid is not versioned, detect that from json instead of hardcoding
+if [[ "x${CODENAME}" = xsid ]]; then
+    echo "${CODENAME}"
+    exit 0
 fi
 
-codename="${1}"
-
-scriptdir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
-rootdir="$(dirname "${scriptdir}")"
-
-distro="$(jq -crM ".distro[] | select(contains(\"_${codename}_\"))" "${rootdir}/DISTROS.json")"
+distro="$(jq -crM ".distro[] | select(contains(\"_${CODENAME}_\"))" "${ROOT_DIR}/DISTROS.json")"
 if [[ -z "${distro}" ]]; then
     exit 1
 fi
 
-echo "$(echo "${distro}" | cut -d_ -f3)${codename}"
+echo "$(echo "${distro}" | cut -d_ -f3)${CODENAME}"
