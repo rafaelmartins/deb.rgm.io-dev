@@ -13,6 +13,7 @@ if [[ -z "${SCRIPT_DIR}" ]]; then
     die "SCRIPT_DIR not defined"
 fi
 
+DEPENDENCIES="${DEPENDENCIES:-}"
 if [[ "x${CI:-}" = "xtrue" ]] && [[ -n "${DEPENDENCIES}" ]]; then
     sudo apt update 1>&2
     sudo apt install -y ${DEPENDENCIES} 1>&2
