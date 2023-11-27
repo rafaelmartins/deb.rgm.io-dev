@@ -24,12 +24,12 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: main
 
       - name: Check out orig
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: orig
           path: orig
@@ -46,6 +46,8 @@ jobs:
     needs:
       - metadata-orig
 
+    if: ${{ needs.metadata-orig.outputs.orig != '[]' && needs.metadata-orig.outputs.orig != '' }}
+
     strategy:
       matrix:
         orig: ${{ fromJSON(needs.metadata-orig.outputs.orig) }}
@@ -61,18 +63,18 @@ jobs:
           echo "ref=$(echo ${{ matrix.orig }} | cut -d' ' -f3)" >> $GITHUB_OUTPUT
 
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: main
 
       - name: Check out orig
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: orig
           path: orig
 
       - name: Check out source repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: ${{ steps.metadata.outputs.gh_fullrepo }}
           ref: ${{ steps.metadata.outputs.ref }}
@@ -94,6 +96,20 @@ jobs:
           name: source-${{ steps.metadata.outputs.repo }}
           path: output
 
+  commit-orig:
+    name: Commit orig
+    runs-on: ubuntu-22.04
+    needs:
+      - orig
+
+    steps:
+      - name: Download source artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: new
+
+      - run: sudo apt install tree && tree new
+
   # build:
   #   name: Build
   #   runs-on: ubuntu-22.04
@@ -113,7 +129,7 @@ jobs:
   #         echo "repodir=$(echo ${{ matrix.build_id }} | cut -d' ' -f1 | sed -e 's/-snapshot$//')" >> $GITHUB_OUTPUT
 
   #     - name: Check out code
-  #       uses: actions/checkout@v3
+  #       uses: actions/checkout@v4
   #       with:
   #         path: src
 
