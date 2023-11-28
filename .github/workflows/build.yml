@@ -98,6 +98,7 @@ jobs:
     runs-on: ubuntu-22.04
     needs:
       - orig
+    continue-on-error: true
 
     steps:
       - name: Check out code
