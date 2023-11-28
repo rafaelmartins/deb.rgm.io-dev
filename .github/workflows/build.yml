@@ -128,6 +128,10 @@ jobs:
   metadata-build:
     name: Discover build metadata
     runs-on: ubuntu-22.04
+    needs:
+      - commit-orig
+
+    if: always()
 
     outputs:
       build: ${{ steps.matrix.outputs.build }}
