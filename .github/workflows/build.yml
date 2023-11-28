@@ -195,8 +195,9 @@ jobs:
             ./output \
             ${{ matrix.build }}
 
-      # - name: Upload build artifacts
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: package-${{ steps.metadata.outputs.repo }}-${{ steps.metadata.outputs.codename }}
-      #     path: output
+      - name: Upload build artifacts
+        if: ${{ matrix.build != 'placeholder' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: build_${{ matrix.build }}
+          path: output
