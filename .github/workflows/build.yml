@@ -160,52 +160,52 @@ jobs:
           build="$(./main/.scripts/discover-build.sh ./main ./orig ./deb)"
           echo "build=${build}" >> $GITHUB_OUTPUT
 
-  # build:
-  #   name: Build
-  #   runs-on: ubuntu-22.04
-  #   needs:
-  #     - metadata
-  #     - sources
+  build:
+    name: Build
+    runs-on: ubuntu-22.04
+    needs:
+      - metadata-build
 
-  #   strategy:
-  #     matrix: ${{ fromJSON(needs.metadata.outputs.build_ids) }}
+    strategy:
+      matrix:
+        build: ${{ fromJSON(needs.metadata-build.outputs.build) }}
 
-  #   steps:
-  #     - name: Parse metadata
-  #       id: metadata
-  #       run: |
-  #         echo "repo=$(echo ${{ matrix.build_id }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
-  #         echo "codename=$(echo ${{ matrix.build_id }} | cut -d' ' -f2 | cut -d_ -f2)" >> $GITHUB_OUTPUT
-  #         echo "repodir=$(echo ${{ matrix.build_id }} | cut -d' ' -f1 | sed -e 's/-snapshot$//')" >> $GITHUB_OUTPUT
+    steps:
+      - name: Parse metadata
+        id: metadata
+        run: |
+          echo "repo=$(echo ${{ matrix.build }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+          echo "codename=$(echo ${{ matrix.build }} | cut -d' ' -f2 | cut -d_ -f2)" >> $GITHUB_OUTPUT
+          echo "repodir=$(echo ${{ matrix.build }} | cut -d' ' -f1 | sed -e 's/-snapshot$//')" >> $GITHUB_OUTPUT
 
-  #     - name: Check out code
-  #       uses: actions/checkout@v4
-  #       with:
-  #         path: src
+      # - name: Check out code
+      #   uses: actions/checkout@v4
+      #   with:
+      #     path: main
 
-  #     - name: Download source artifacts
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: source-${{ steps.metadata.outputs.repo }}
-  #         path: source
+      # - name: Download source artifacts
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: source-${{ steps.metadata.outputs.repo }}
+      #     path: source
 
-  #     - name: Locate source file
-  #       id: source
-  #       working-directory: source
-  #       run: |
-  #         echo "source=$(ls -1 *.orig.* | head -n 1)" >> $GITHUB_OUTPUT
+      # - name: Locate source file
+      #   id: source
+      #   working-directory: source
+      #   run: |
+      #     echo "source=$(ls -1 *.orig.* | head -n 1)" >> $GITHUB_OUTPUT
 
-  #     - name: Build
-  #       run: |
-  #         ./src/.scripts/build.sh \
-  #           "${{ steps.metadata.outputs.repo }}" \
-  #           "${{ steps.metadata.outputs.codename }}" \
-  #           "./source/${{ steps.source.outputs.source }}" \
-  #           "./src/${{ steps.metadata.outputs.repodir }}" \
-  #           ./output
+      # - name: Build
+      #   run: |
+      #     ./src/.scripts/build.sh \
+      #       "${{ steps.metadata.outputs.repo }}" \
+      #       "${{ steps.metadata.outputs.codename }}" \
+      #       "./source/${{ steps.source.outputs.source }}" \
+      #       "./src/${{ steps.metadata.outputs.repodir }}" \
+      #       ./output
 
-  #     - name: Upload build artifacts
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: package-${{ steps.metadata.outputs.repo }}-${{ steps.metadata.outputs.codename }}
-  #         path: output
+      # - name: Upload build artifacts
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: package-${{ steps.metadata.outputs.repo }}-${{ steps.metadata.outputs.codename }}
+      #     path: output
