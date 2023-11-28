@@ -16,8 +16,8 @@ pushd "${NEW_DIR}" > /dev/null
 
 for bdir in build--*; do
     build_id="$(echo "${bdir}" | cut -d- -f3-)"
-    repo_name="$(echo "${build_dir}" | cut -d' ' -f1)"
-    distro="$(echo "${build_dir}" | cut -d' ' -f2)"
+    repo_name="$(echo "${build_id}" | cut -d' ' -f1)"
+    distro="$(echo "${build_id}" | cut -d' ' -f2)"
     codename="$(echo "${distro}" | cut -d_ -f2)"
 
     rm -rf "${DEB_DIR}/${repo_name}/${codename}"
