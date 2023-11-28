@@ -87,13 +87,10 @@ jobs:
           mkdir -p ../output
           "../main/${{ steps.metadata.outputs.repodir }}/orig.sh" ../output
 
-      # - name: Reuse existing source if available
-      #   run: ./main/.scripts/source.sh output repos
-
       - name: Upload source artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: source-${{ steps.metadata.outputs.repo }}
+          name: orig_${{ steps.metadata.outputs.repo }}
           path: output
 
   commit-orig:
