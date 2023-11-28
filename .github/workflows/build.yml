@@ -125,6 +125,37 @@ jobs:
           git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}
           git push origin orig
 
+  metadata-build:
+    name: Discover build metadata
+    runs-on: ubuntu-22.04
+
+    outputs:
+      build: ${{ steps.matrix.outputs.build }}
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          path: main
+
+      - name: Check out orig
+        uses: actions/checkout@v4
+        with:
+          ref: orig
+          path: orig
+
+      - name: Check out deb
+        uses: actions/checkout@v4
+        with:
+          ref: deb
+          path: deb
+
+      - name: Generate build matrix
+        id: matrix
+        run: |
+          build="$(./main/.scripts/discover-build.sh ./main ./orig ./deb)"
+          echo "build=${build}" >> $GITHUB_OUTPUT
+
   # build:
   #   name: Build
   #   runs-on: ubuntu-22.04

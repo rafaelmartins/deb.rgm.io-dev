@@ -10,7 +10,7 @@ REPO_NAME="${2}"
 CODENAME="${3}"
 
 if [[ ! -d "${DEB_DIR}/${REPO_NAME}/${CODENAME}" ]]; then
-    exit 1
+    exit 0
 fi
 
 pushd "${DEB_DIR}/${REPO_NAME}/${CODENAME}" > /dev/null

@@ -9,7 +9,7 @@ MAIN_DIR="$(realpath "${1}")"
 ORIG_DIR="$(realpath "${2}")"
 
 orig=()
-for repo in "$("${SCRIPT_DIR}/metadata-repos.sh" "${MAIN_DIR}")"; do
+for repo in $("${SCRIPT_DIR}/metadata-repos.sh" "${MAIN_DIR}"); do
     gh_repo="$("${SCRIPT_DIR}/metadata-control-github-repo.sh" "${MAIN_DIR}" "${repo}")"
 
     # release repository
