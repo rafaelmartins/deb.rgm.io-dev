@@ -37,7 +37,7 @@ for repo in $("${SCRIPT_DIR}/metadata-repos.sh" "${MAIN_DIR}"); do
 done
 
 if [[ "${#build[@]}" -eq 0 ]]; then
-    orig+=("placeholder")
+    build+=("placeholder")
 fi
 
 jq \
