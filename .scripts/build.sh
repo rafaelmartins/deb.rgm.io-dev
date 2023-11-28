@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 export DEBEMAIL="rafael+deb@rafaelmartins.eng.br"
 export DEBFULLNAME="Automatic Builder (github-actions)"
 
