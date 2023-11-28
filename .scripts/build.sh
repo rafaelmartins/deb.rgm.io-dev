@@ -67,7 +67,7 @@ pushd "${builddir}" > /dev/null
 
 cp \
     --recursive \
-    "${MAIN_DIR}/${REPO_NAME}/debian" \
+    "${MAIN_DIR}/${REPO_NAME%%-snapshot}/debian" \
     .
 
 if ! dch \
