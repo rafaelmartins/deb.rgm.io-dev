@@ -8,6 +8,10 @@ source "${SCRIPT_DIR}/utils.sh"
 ORIG_DIR="$(realpath "${1}")"
 NEW_DIR="$(realpath "${2}")"
 
+if [[ ! -d "${NEW_DIR}" ]]; then
+    exit 0
+fi
+
 pushd "${NEW_DIR}" > /dev/null
 
 for odir in orig_*; do
