@@ -17,7 +17,9 @@ for repo in $("${SCRIPT_DIR}/metadata-repos.sh" "${MAIN_DIR}"); do
     chl_version="$("${SCRIPT_DIR}/metadata-strip-rev.sh" "${chl_version_rev}")"
     orig_version="$("${SCRIPT_DIR}/metadata-orig-version.sh" "${ORIG_DIR}" "${repo}")"
     if [[ -z "${orig_version}" ]] || dpkg --compare-versions "${chl_version}" gt "${orig_version}"; then
-        orig+=("${repo} ${gh_repo} v${chl_version}")
+        if [[ "${chl_version//./}" -ne 0 ]]; then
+            orig+=("${repo} ${gh_repo} v${chl_version}")
+        fi
     fi
 
     # snapshot repository

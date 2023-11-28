@@ -1,33 +1,23 @@
 #!/bin/bash
 
-set -Eeuo pipefail
-
 export DEBEMAIL="rafael+deb@rafaelmartins.eng.br"
 export DEBFULLNAME="Automatic Builder (github-actions)"
 
-function die() {
-    echo "error:" ${@} > /dev/stderr
-    exit 1
-}
+NUM_ARGS=5
+DEPENDENCIES="devscripts equivs"
 
-if [[ $# -ne 5 ]]; then
-    die "invalid number of arguments"
-fi
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+source "${SCRIPT_DIR}/utils.sh"
 
-if [[ "x${CI:-}" = "xtrue" ]]; then
-    sudo apt update 1>&2
-    sudo apt install -y devscripts equivs 1>&2
-fi
+MAIN_DIR="$(realpath "${1}")"
+ORIG_DIR="$(realpath "${2}")"
+OUTPUT_DIR="$(realpath "${3}")"
+REPO_NAME="${4}"
+DISTRO="${5}"
 
-repo="${1}"
-codename="${2}"
-source="$(realpath "${3}")"
-repodir="$(realpath "${4}")"
-outdir="$(realpath "${5}")"
+CODENAME="$(echo "${5}" | cut -d_ -f2)"
 
-scriptdir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
-
-image="$("${scriptdir}/distro-docker-image.sh" "${codename}")"
+IMAGE="$("${SCRIPT_DIR}/distro-docker-image.sh" "${CODENAME}")"
 
 tmpdir="$(mktemp -d)"
 trap 'rm -rf -- "${tmpdir}"' EXIT
@@ -36,11 +26,18 @@ mkdir -p "${tmpdir}"/build{,deps}
 
 # FIXME: this could be moved to source phase
 pushd "${tmpdir}/builddeps" > /dev/null
-mk-build-deps "${repodir}/debian/control"
+mk-build-deps "${MAIN_DIR}/${REPO_NAME%%-snapshot}/debian/control"
 popd > /dev/null
 
+source="$(basename "$(
+    ls \
+        -1 \
+        "${ORIG_DIR}/${REPO_NAME}/"*.orig.* \
+    | head -n1
+)")"
+
 version="$(
-    echo "$(basename "${source}")" \
+    echo "${source}" \
     | sed 's/\.orig\..*$//' \
     | cut -d_ -f2
 )"
@@ -48,7 +45,7 @@ version="$(
 tar \
     --extract \
     --verbose \
-    --file "${source}" \
+    --file "${ORIG_DIR}/${REPO_NAME}/${source}" \
     --directory "${tmpdir}/build"
 
 cp \
@@ -60,7 +57,7 @@ builddir="$(
         "${tmpdir}/build" \
         -maxdepth 1 \
         -type d \
-        -iname "${repo%%-snapshot}*" \
+        -iname "${REPO_NAME%%-snapshot}*" \
     | head -n 1
 )"
 
@@ -68,13 +65,13 @@ pushd "${builddir}" > /dev/null
 
 cp \
     --recursive \
-    "${repodir}/debian" \
+    "${MAIN_DIR}/${REPONAME}/debian" \
     .
 
 if ! dch \
-    --distribution "${codename}" \
-    --newversion "${version}-1~$("${scriptdir}/distro-version-suffix.sh" "${codename}")" \
-    "Automated build for ${codename}"
+    --distribution "${CODENAME}" \
+    --newversion "${version}-1~$("${SCRIPT_DIR}/distro-version-suffix.sh" "${CODENAME}")" \
+    "Automated build for ${CODENAME}"
 then
     exit 0
 fi
@@ -90,7 +87,7 @@ docker run \
     --volume "${tmpdir}/build:/build" \
     --volume "${tmpdir}/builddeps:/builddeps" \
     --workdir "/build/$(basename "${builddir}")" \
-    "${image}" \
+    "${IMAGE}" \
     bash \
         -c "\
             apt update \
@@ -99,10 +96,10 @@ docker run \
             chown -R $(id -u):$(id -g) /build \
         "
 
-mkdir -p "${outdir}/${repo}_${codename}"
+mkdir -p "${OUTPUT_DIR}/${REPO_NAME}_${CODENAME}"
 
 find \
     "${tmpdir}/build" \
     -maxdepth 1 \
     -type f \
-    -exec cp -- "{}" "${outdir}/${repo}_${codename}/" \;
+    -exec cp -- "{}" "${OUTPUT_DIR}/${REPO_NAME}_${CODENAME}/" \;

@@ -173,39 +173,27 @@ jobs:
         build: ${{ fromJSON(needs.metadata-build.outputs.build) }}
 
     steps:
-      - name: Parse metadata
+      - name: Check out code
         if: ${{ matrix.build != 'placeholder' }}
-        id: metadata
+        uses: actions/checkout@v4
+        with:
+          path: main
+
+      - name: Check out orig
+        if: ${{ matrix.build != 'placeholder' }}
+        uses: actions/checkout@v4
+        with:
+          ref: orig
+          path: orig
+
+      - name: Build
+        if: ${{ matrix.build != 'placeholder' }}
         run: |
-          echo "repo=$(echo ${{ matrix.build }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
-          echo "codename=$(echo ${{ matrix.build }} | cut -d' ' -f2 | cut -d_ -f2)" >> $GITHUB_OUTPUT
-          echo "repodir=$(echo ${{ matrix.build }} | cut -d' ' -f1 | sed -e 's/-snapshot$//')" >> $GITHUB_OUTPUT
-
-      # - name: Check out code
-      #   uses: actions/checkout@v4
-      #   with:
-      #     path: main
-
-      # - name: Download source artifacts
-      #   uses: actions/download-artifact@v3
-      #   with:
-      #     name: source-${{ steps.metadata.outputs.repo }}
-      #     path: source
-
-      # - name: Locate source file
-      #   id: source
-      #   working-directory: source
-      #   run: |
-      #     echo "source=$(ls -1 *.orig.* | head -n 1)" >> $GITHUB_OUTPUT
-
-      # - name: Build
-      #   run: |
-      #     ./src/.scripts/build.sh \
-      #       "${{ steps.metadata.outputs.repo }}" \
-      #       "${{ steps.metadata.outputs.codename }}" \
-      #       "./source/${{ steps.source.outputs.source }}" \
-      #       "./src/${{ steps.metadata.outputs.repodir }}" \
-      #       ./output
+          ./main/.scripts/build.sh \
+            ./main \
+            ./orig \
+            ./output \
+            ${{ matrix.build }}
 
       # - name: Upload build artifacts
       #   uses: actions/upload-artifact@v3
