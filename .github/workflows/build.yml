@@ -94,7 +94,7 @@ jobs:
         if: ${{ matrix.orig != 'placeholder' }}
         uses: actions/upload-artifact@v3
         with:
-          name: orig_${{ steps.metadata.outputs.repo }}
+          name: orig:${{ steps.metadata.outputs.repo }}
           path: output
 
   commit-orig:
@@ -199,5 +199,5 @@ jobs:
         if: ${{ matrix.build != 'placeholder' }}
         uses: actions/upload-artifact@v3
         with:
-          name: build_${{ matrix.build }}
+          name: build:${{ matrix.build }}
           path: output

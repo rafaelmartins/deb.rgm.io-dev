@@ -14,7 +14,7 @@ fi
 
 pushd "${NEW_DIR}" > /dev/null
 
-for odir in orig_*; do
+for odir in orig:*; do
     dir="$(echo "${odir}" | cut -d_ -f2)"
     orig="$(basename "$(ls -1 "${odir}"/*.orig.* | head -n1)")"
     if [[ -e "${ORIG_DIR}/${dir}/${orig}" ]]; then
