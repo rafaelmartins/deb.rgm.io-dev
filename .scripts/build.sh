@@ -51,7 +51,7 @@ tar \
     --directory "${tmpdir}/build"
 
 cp \
-    "${source}" \
+    "${ORIG_DIR}/${REPO_NAME}/${source}" \
     "${tmpdir}/build/"
 
 builddir="$(
