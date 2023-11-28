@@ -100,6 +100,11 @@ jobs:
       - orig
 
     steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          path: main
+
       - name: Check out orig
         uses: actions/checkout@v4
         with:
