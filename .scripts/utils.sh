@@ -15,6 +15,7 @@ fi
 
 DEPENDENCIES="${DEPENDENCIES:-}"
 if [[ "x${CI:-}" = "xtrue" ]] && [[ -n "${DEPENDENCIES}" ]]; then
+    export DEBIAN_FRONTEND=noninteractive
     sudo apt update 1>&2
     sudo apt install -y ${DEPENDENCIES} 1>&2
 fi
