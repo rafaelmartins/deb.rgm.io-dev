@@ -119,6 +119,12 @@ jobs:
       - name: Commit orig updates
         run: ./main/.scripts/commit-orig.sh ./orig ./new
 
+      - name: Push orig updates
+        working-directory: orig
+        run: |
+          git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}
+          git push origin orig
+
   # build:
   #   name: Build
   #   runs-on: ubuntu-22.04

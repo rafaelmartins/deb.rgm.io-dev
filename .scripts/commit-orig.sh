@@ -29,6 +29,5 @@ if [[ "x${CI:-}" = "xtrue" ]]; then
     git config user.email 'github-actions[bot]@users.noreply.github.com'
     git add .
     git commit -m 'update orig' || true
-    git show
     popd > /dev/null
 fi
