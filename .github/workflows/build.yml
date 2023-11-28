@@ -100,12 +100,19 @@ jobs:
       - orig
 
     steps:
+      - name: Check out orig
+        uses: actions/checkout@v4
+        with:
+          ref: orig
+          path: orig
+
       - name: Download source artifacts
         uses: actions/download-artifact@v3
         with:
           path: new
 
-      - run: sudo apt install tree && tree new
+      - name: Commit orig updates
+        run: ./main/.scripts/commit-orig.sh ./orig ./new
 
   # build:
   #   name: Build
