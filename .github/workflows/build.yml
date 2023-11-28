@@ -166,6 +166,8 @@ jobs:
     needs:
       - metadata-build
 
+    if: ${{ needs.metadata-build.outputs.build != '[]' && needs.metadata-build.outputs.build != '' }}
+
     strategy:
       matrix:
         build: ${{ fromJSON(needs.metadata-build.outputs.build) }}
