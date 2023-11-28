@@ -201,3 +201,35 @@ jobs:
         with:
           name: build--${{ matrix.build }}
           path: output
+
+  commit-build:
+    name: Commit build
+    runs-on: ubuntu-22.04
+    needs:
+      - build
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          path: main
+
+      - name: Check out deb
+        uses: actions/checkout@v4
+        with:
+          ref: deb
+          path: deb
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: new
+
+      - name: Commit build updates
+        run: ./main/.scripts/commit-build.sh ./deb ./new
+
+      - name: Push build updates
+        working-directory: deb
+        run: |
+          git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}
+          git push origin deb
