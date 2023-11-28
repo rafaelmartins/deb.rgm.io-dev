@@ -30,6 +30,10 @@ for repo in $("${SCRIPT_DIR}/metadata-repos.sh" "${MAIN_DIR}"); do
     fi
 done
 
+if [[ "${#orig[@]}" -eq 0 ]]; then
+    orig+=("placeholder")
+fi
+
 jq \
     -cnM \
     '$ARGS.positional' \

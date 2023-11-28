@@ -46,14 +46,13 @@ jobs:
     needs:
       - metadata-orig
 
-    #if: ${{ needs.metadata-orig.outputs.orig != '[]' && needs.metadata-orig.outputs.orig != '' }}
-
     strategy:
       matrix:
         orig: ${{ fromJSON(needs.metadata-orig.outputs.orig) }}
 
     steps:
       - name: Parse metadata
+        if: ${{ matrix.orig != 'placeholder' }}
         id: metadata
         run: |
           echo "repo=$(echo ${{ matrix.orig }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
@@ -63,17 +62,20 @@ jobs:
           echo "ref=$(echo ${{ matrix.orig }} | cut -d' ' -f3)" >> $GITHUB_OUTPUT
 
       - name: Check out code
+        if: ${{ matrix.orig != 'placeholder' }}
         uses: actions/checkout@v4
         with:
           path: main
 
       - name: Check out orig
+        if: ${{ matrix.orig != 'placeholder' }}
         uses: actions/checkout@v4
         with:
           ref: orig
           path: orig
 
       - name: Check out source repository
+        if: ${{ matrix.orig != 'placeholder' }}
         uses: actions/checkout@v4
         with:
           repository: ${{ steps.metadata.outputs.gh_fullrepo }}
@@ -82,12 +84,14 @@ jobs:
           fetch-depth: 0
 
       - name: Generate orig
+        if: ${{ matrix.orig != 'placeholder' }}
         working-directory: ${{ steps.metadata.outputs.gh_repo }}
         run: |
           mkdir -p ../output
           "../main/${{ steps.metadata.outputs.repodir }}/orig.sh" ../output
 
       - name: Upload source artifacts
+        if: ${{ matrix.orig != 'placeholder' }}
         uses: actions/upload-artifact@v3
         with:
           name: orig_${{ steps.metadata.outputs.repo }}
@@ -98,7 +102,6 @@ jobs:
     runs-on: ubuntu-22.04
     needs:
       - orig
-    continue-on-error: true
 
     steps:
       - name: Check out code
@@ -131,8 +134,6 @@ jobs:
     runs-on: ubuntu-22.04
     needs:
       - commit-orig
-
-    #if: always()
 
     outputs:
       build: ${{ steps.matrix.outputs.build }}
@@ -167,14 +168,13 @@ jobs:
     needs:
       - metadata-build
 
-    #if: ${{ needs.metadata-build.outputs.build != '[]' && needs.metadata-build.outputs.build != '' }}
-
     strategy:
       matrix:
         build: ${{ fromJSON(needs.metadata-build.outputs.build) }}
 
     steps:
       - name: Parse metadata
+        if: ${{ matrix.build != 'placeholder' }}
         id: metadata
         run: |
           echo "repo=$(echo ${{ matrix.build }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
