@@ -46,7 +46,7 @@ jobs:
     needs:
       - metadata-orig
 
-    if: ${{ needs.metadata-orig.outputs.orig != '[]' && needs.metadata-orig.outputs.orig != '' }}
+    #if: ${{ needs.metadata-orig.outputs.orig != '[]' && needs.metadata-orig.outputs.orig != '' }}
 
     strategy:
       matrix:
@@ -131,7 +131,7 @@ jobs:
     needs:
       - commit-orig
 
-    if: always()
+    #if: always()
 
     outputs:
       build: ${{ steps.matrix.outputs.build }}
@@ -166,7 +166,7 @@ jobs:
     needs:
       - metadata-build
 
-    if: ${{ needs.metadata-build.outputs.build != '[]' && needs.metadata-build.outputs.build != '' }}
+    #if: ${{ needs.metadata-build.outputs.build != '[]' && needs.metadata-build.outputs.build != '' }}
 
     strategy:
       matrix:
