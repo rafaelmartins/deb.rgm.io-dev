@@ -23,7 +23,7 @@ for repo in $("${SCRIPT_DIR}/metadata-repos.sh" "${MAIN_DIR}"); do
     fi
 
     # snapshot repository
-    gh_version="$("${SCRIPT_DIR}/metadata-github-version.sh" "${MAIN_DIR}" "${repo}")"
+    gh_version="$("${SCRIPT_DIR}/metadata-control-github-version.sh" "${MAIN_DIR}" "${repo}")"
     gh_sha1="$("${SCRIPT_DIR}/metadata-control-github-sha1.sh" "${MAIN_DIR}" "${repo}")"
     gh_short_sha1="$("${SCRIPT_DIR}/metadata-short-sha1.sh" "${gh_sha1}")"
     orig_ss_version="$("${SCRIPT_DIR}/metadata-orig-version.sh" "${ORIG_DIR}" "${repo}-snapshot")"

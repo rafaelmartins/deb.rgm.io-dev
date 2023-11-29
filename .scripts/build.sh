@@ -77,6 +77,8 @@ builddir="$(
 
 pushd "${builddir}" > /dev/null
 
+suffix="$("${SCRIPT_DIR}/distro-version-suffix.sh" "${CODENAME}")"
+
 cp \
     --recursive \
     "${MAIN_DIR}/${REPO_NAME%%-snapshot}/debian" \
@@ -84,7 +86,7 @@ cp \
 
 if ! dch \
     --distribution "${CODENAME}" \
-    --newversion "${version}-${revision}~$("${SCRIPT_DIR}/distro-version-suffix.sh" "${CODENAME}")" \
+    --newversion "${version}-${revision}~${suffix}" \
     "Automated build for ${CODENAME}"
 then
     exit 0
