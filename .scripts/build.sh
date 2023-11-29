@@ -104,10 +104,11 @@ docker run \
     "${IMAGE}" \
     bash \
         -c "\
+            set -Eeuo pipefail; \
+            trap 'chown -R $(id -u):$(id -g) /build' EXIT; \
             apt update \
                 && apt install -y --no-install-recommends /builddeps/*.deb \
                 && dpkg-buildpackage -uc -us -sa; \
-            chown -R $(id -u):$(id -g) /build \
         "
 
 mkdir -p "${OUTPUT_DIR}"
