@@ -3,10 +3,7 @@ on:
   - push
   - workflow_dispatch
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
+permissions: read-all
 
 concurrency:
   group: build
@@ -104,6 +101,9 @@ jobs:
     runs-on: ubuntu-22.04
     needs:
       - orig
+
+    permissions:
+      contents: write
 
     steps:
       - name: Check out code
@@ -210,6 +210,9 @@ jobs:
     needs:
       - build
 
+    permissions:
+      contents: write
+
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -263,11 +266,17 @@ jobs:
           path: ./output
 
   deploy:
+    runs-on: ubuntu-22.04
+    needs: create-repos
+
+    permissions:
+      pages: write
+      id-token: write
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-22.04
-    needs: create-repos
+
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
