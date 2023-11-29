@@ -44,6 +44,18 @@ version="$(
     | cut -d_ -f2
 )"
 
+revision="$(
+    "${SCRIPT_DIR}/metadata-changelog-version-rev.sh" \
+        "${MAIN_DIR}" \
+        "${REPO_NAME}" \
+    | rev \
+    | cut -d- -f1 \
+    | rev
+)"
+if [[ -z "${revision}" ]]; then
+    revision=1
+fi
+
 tar \
     --extract \
     --verbose \
@@ -72,7 +84,7 @@ cp \
 
 if ! dch \
     --distribution "${CODENAME}" \
-    --newversion "${version}-1~$("${SCRIPT_DIR}/distro-version-suffix.sh" "${CODENAME}")" \
+    --newversion "${version}-${revision}~$("${SCRIPT_DIR}/distro-version-suffix.sh" "${CODENAME}")" \
     "Automated build for ${CODENAME}"
 then
     exit 0
