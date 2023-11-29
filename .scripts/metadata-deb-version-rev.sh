@@ -9,7 +9,7 @@ DEB_DIR="$(realpath "${1}")"
 REPO_NAME="${2}"
 CODENAME="${3}"
 
-if [[ ! -d "${DEB_DIR}/${REPO_NAME}/${CODENAME}" ]]; then
+if [[ ! -e "${DEB_DIR}/${REPO_NAME}/${CODENAME}"/*.changes ]]; then
     exit 0
 fi
 
