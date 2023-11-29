@@ -18,6 +18,9 @@ for repo in $("${SCRIPT_DIR}/metadata-repos.sh" "${MAIN_DIR}"); do
 
     for distro in $("${SCRIPT_DIR}/metadata-distros.sh"); do
         codename="$(echo "${distro}" | cut -d_ -f2)"
+        if ! "${SCRIPT_DIR}/metadata-build-for-codename.sh" "${MAIN_DIR}" "${repo}" "${codename}"; then
+            continue
+        fi
 
         # release repository
         if [[ "${chl_version}" = "${orig_version}" ]]; then

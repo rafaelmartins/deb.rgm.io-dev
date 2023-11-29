@@ -14,8 +14,7 @@ gh_user_repo="$(
         "${REPO_NAME}"
 )"
 
-git \
-    ls-remote \
+git ls-remote \
     https://github.com/${gh_user_repo}.git \
     HEAD \
 | cut -d$'\t' -f1

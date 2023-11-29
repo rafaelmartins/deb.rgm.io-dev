@@ -15,6 +15,7 @@ Vcs-Browser: https://github.com/rafaelmartins/filebin
 Vcs-Git: https://github.com/rafaelmartins/filebin.git
 Rules-Requires-Root: no
 XS-Go-Import-Path: github.com/rafaelmartins/filebin
+X-Skip-Build-For: focal
 
 Package: filebin
 Architecture: any
