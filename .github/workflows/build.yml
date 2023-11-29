@@ -5,6 +5,7 @@ on:
 
 permissions:
   contents: write
+  pages: write
 
 concurrency:
   group: build
@@ -233,3 +234,40 @@ jobs:
         run: |
           git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}
           git push origin deb
+
+  create-repos:
+    name: Create repositories
+    runs-on: ubuntu-22.04
+    needs:
+      - commit-build
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          path: main
+
+      - name: Check out deb
+        uses: actions/checkout@v4
+        with:
+          ref: deb
+          path: deb
+
+      - name: Create repositories
+        run: ./main/.scripts/create-repos.sh ./output ./deb
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: ./output
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-22.04
+    needs: create-repos
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
