@@ -16,7 +16,7 @@ OUTPUT_DIR="$(realpath "${2}")"
 REPO_NAME="${3}"
 DISTRO="${4}"
 
-CODENAME="$(echo "${5}" | cut -d_ -f2)"
+CODENAME="$(echo "${4}" | cut -d_ -f2)"
 
 IMAGE="$("${SCRIPT_DIR}/distro-docker-image.sh" "${CODENAME}")"
 
