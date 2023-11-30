@@ -31,8 +31,8 @@ for repo in $("${SCRIPT_DIR}/metadata-repos.sh"); do
 
         # snapshot repository
         deb_version_rev="$("${SCRIPT_DIR}/metadata-deb-version-rev.sh" "${DEB_DIR}" "${repo}-snapshot" "${codename}")"
-        deb_version="$("${SCRIPT_DIR}/metadata-strip-rev.sh" "${deb_version_rev}")"
-        if [[ "${deb_version}" != "${orig_ss_version}" ]]; then
+        orig_ss_version_rev="${orig_ss_version}-$(echo "${chl_version_rev}" | rev | cut -d- -f1 | rev)"
+        if [[ "${deb_version_rev}" != "${orig_ss_version_rev}" ]]; then
             build+=("${repo}-snapshot ${distro}")
         fi
     done
