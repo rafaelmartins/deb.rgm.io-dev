@@ -37,7 +37,7 @@ jobs:
       - name: Generate orig matrix
         id: matrix
         run: |
-          orig="$(./main/.scripts/discover-orig.sh ./main ./orig)"
+          orig="$(./main/.scripts/discover-orig.sh ./orig)"
           echo "orig=${orig}" >> $GITHUB_OUTPUT
 
   orig:
@@ -162,7 +162,7 @@ jobs:
       - name: Generate build matrix
         id: matrix
         run: |
-          build="$(./main/.scripts/discover-build.sh ./main ./orig ./deb)"
+          build="$(./main/.scripts/discover-build.sh ./orig ./deb)"
           echo "build=${build}" >> $GITHUB_OUTPUT
 
   build:
@@ -191,12 +191,7 @@ jobs:
 
       - name: Build
         if: ${{ matrix.build != 'placeholder' }}
-        run: |
-          ./main/.scripts/build.sh \
-            ./main \
-            ./orig \
-            ./output \
-            ${{ matrix.build }}
+        run: ./main/.scripts/build.sh ./orig ./output ${{ matrix.build }}
 
       - name: Upload build artifacts
         if: ${{ matrix.build != 'placeholder' }}
