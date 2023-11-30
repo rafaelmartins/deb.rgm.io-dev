@@ -24,8 +24,15 @@ function reprepro_conf_sections() {
     else
         echo "Description: apt repository for ${1} releases"
     fi
+    if [[ -n "${GPG_SIGNING_KEY_ID}" ]]; then
+        echo "SignWith: ${GPG_SIGNING_KEY_ID}"
+    fi
     echo
 }
+
+if [[ "x${CI:-}" = "xtrue" ]]; then
+    echo -e "${GPG_SIGNING_KEY}" | gpg --import --batch --no-tty
+fi
 
 pushd "${DEB_DIR}" > /dev/null
 
