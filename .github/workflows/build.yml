@@ -126,12 +126,6 @@ jobs:
       - name: Commit orig updates
         run: ./main/.scripts/commit-orig.sh ./orig ./new
 
-      - name: Push orig updates
-        working-directory: orig
-        run: |
-          git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}
-          git push origin orig
-
   metadata-build:
     name: Discover build metadata
     runs-on: ubuntu-22.04
@@ -228,12 +222,6 @@ jobs:
 
       - name: Commit build updates
         run: ./main/.scripts/commit-build.sh ./deb ./new
-
-      - name: Push build updates
-        working-directory: deb
-        run: |
-          git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}
-          git push origin deb
 
   create-repos:
     name: Create repositories
