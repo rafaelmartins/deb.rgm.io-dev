@@ -50,8 +50,8 @@ fi
 
 if [[ "x${CI:-}" = "xtrue" ]]; then
     pushd "${ORIG_DIR}" > /dev/null
-    git config user.name 'github-actions'
-    git config user.email 'github-actions@github.com'
+    git config user.name 'github-actions[bot]'
+    git config user.email 'github-actions[bot]@users.noreply.github.com'
     git add .
     git commit -m 'update orig' || true
     git push
