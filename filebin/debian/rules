@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+
+#export DH_VERBOSE = 1
+export GOPROXY = https://proxy.golang.org,direct
+export GO111MODULE = auto
+export GOFLAGS = -modcacherw
+
+%:
+	dh $@ \
+		--builddirectory=_build \
+		--buildsystem=golang
+
+override_dh_auto_install:
+	dh_auto_install -- \
+		--no-source
