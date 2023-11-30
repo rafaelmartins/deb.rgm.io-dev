@@ -244,6 +244,8 @@ jobs:
       - name: Import signing key
         run: echo -e "${{ secrets.GPG_SIGNING_KEY }}" | gpg --import --batch --no-tty
 
+      - run: gpg --armor --export
+
       - name: Create repositories
         env:
           GPG_SIGNING_KEY_ID: ${{ secrets.GPG_SIGNING_KEY_ID }}
