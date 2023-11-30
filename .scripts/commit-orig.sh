@@ -30,7 +30,7 @@ done
 
 popd > /dev/null
 
-if [[ -d "${NEW_DIR}" ]]; then
+if ls "${NEW_DIR}"/orig--* &> /dev/null; then
     pushd "${NEW_DIR}" > /dev/null
 
     # add new files
