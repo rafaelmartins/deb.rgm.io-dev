@@ -74,9 +74,10 @@ fi
 
 if [[ "x${CI:-}" = "xtrue" ]]; then
     pushd "${DEB_DIR}" > /dev/null
-    git config user.name 'github-actions[bot]'
-    git config user.email 'github-actions[bot]@users.noreply.github.com'
+    git config user.name 'github-actions'
+    git config user.email 'github-actions@github.com'
     git add .
     git commit -m 'update build' || true
+    git push
     popd > /dev/null
 fi
