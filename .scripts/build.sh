@@ -5,17 +5,16 @@ set -x
 export DEBEMAIL="rafael+deb@rafaelmartins.eng.br"
 export DEBFULLNAME="Automatic Builder (github-actions)"
 
-NUM_ARGS=5
+NUM_ARGS=4
 DEPENDENCIES="devscripts equivs"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 source "${SCRIPT_DIR}/utils.sh"
 
-MAIN_DIR="$(realpath "${1}")"
-ORIG_DIR="$(realpath "${2}")"
-OUTPUT_DIR="$(realpath "${3}")"
-REPO_NAME="${4}"
-DISTRO="${5}"
+ORIG_DIR="$(realpath "${1}")"
+OUTPUT_DIR="$(realpath "${2}")"
+REPO_NAME="${3}"
+DISTRO="${4}"
 
 CODENAME="$(echo "${5}" | cut -d_ -f2)"
 
@@ -28,7 +27,7 @@ mkdir -p "${tmpdir}"/build{,deps}
 
 # FIXME: this could be moved to source phase
 pushd "${tmpdir}/builddeps" > /dev/null
-mk-build-deps "${MAIN_DIR}/${REPO_NAME%%-snapshot}/debian/control"
+mk-build-deps "${ROOT_DIR}/${REPO_NAME%%-snapshot}/debian/control"
 popd > /dev/null
 
 source="$(basename "$(
@@ -46,7 +45,6 @@ version="$(
 
 revision="$(
     "${SCRIPT_DIR}/metadata-changelog-version-rev.sh" \
-        "${MAIN_DIR}" \
         "${REPO_NAME}" \
     | rev \
     | cut -d- -f1 \
@@ -81,7 +79,7 @@ suffix="$("${SCRIPT_DIR}/distro-version-suffix.sh" "${CODENAME}")"
 
 cp \
     --recursive \
-    "${MAIN_DIR}/${REPO_NAME%%-snapshot}/debian" \
+    "${ROOT_DIR}/${REPO_NAME%%-snapshot}/debian" \
     .
 
 if ! dch \

@@ -1,16 +1,15 @@
 #!/bin/bash
 
-NUM_ARGS=3
+NUM_ARGS=2
 DEPENDENCIES="dctrl-tools"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 source "${SCRIPT_DIR}/utils.sh"
 
-MAIN_DIR="$(realpath "${1}")"
-REPO_NAME="${2}"
-CODENAME="${3}"
+REPO_NAME="${1}"
+CODENAME="${2}"
 
-control="${MAIN_DIR}/${REPO_NAME%%-snapshot}/debian/control"
+control="${ROOT_DIR}/${REPO_NAME%%-snapshot}/debian/control"
 if [[ ! -f  "${control}" ]]; then
     die "control file not found"
 fi

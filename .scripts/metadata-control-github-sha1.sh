@@ -1,16 +1,14 @@
 #!/bin/bash
 
-NUM_ARGS=2
+NUM_ARGS=1
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 source "${SCRIPT_DIR}/utils.sh"
 
-MAIN_DIR="$(realpath "${1}")"
-REPO_NAME="${2}"
+REPO_NAME="${1}"
 
 gh_user_repo="$(
     "${SCRIPT_DIR}/metadata-control-github-repo.sh" \
-        "${MAIN_DIR}" \
         "${REPO_NAME}"
 )"
 

@@ -1,14 +1,13 @@
 #!/bin/bash
 
-NUM_ARGS=2
+NUM_ARGS=1
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 source "${SCRIPT_DIR}/utils.sh"
 
-MAIN_DIR="$(realpath "${1}")"
-REPO_NAME="${2}"
+REPO_NAME="${1}"
 
-changelog="${MAIN_DIR}/${REPO_NAME%%-snapshot}/debian/changelog"
+changelog="${ROOT_DIR}/${REPO_NAME%%-snapshot}/debian/changelog"
 if [[ ! -f  "${changelog}" ]]; then
     die "changelog not found"
 fi
