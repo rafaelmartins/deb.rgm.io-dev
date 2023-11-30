@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 NUM_ARGS=2
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
