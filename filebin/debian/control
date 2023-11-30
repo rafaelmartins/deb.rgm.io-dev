@@ -1,0 +1,23 @@
+Source: filebin
+Section: web
+Priority: optional
+Maintainer: Rafael G. Martins <rafael@rafaelmartins.eng.br>
+Build-Depends: debhelper (>= 13.4),
+               debhelper-compat (= 13),
+               dh-golang (>= 1.53),
+               dh-sequence-golang,
+               golang-any,
+               ca-certificates,
+               libmagic-dev
+Standards-Version: 4.5.1
+Homepage: https://github.com/rafaelmartins/filebin
+Vcs-Browser: https://github.com/rafaelmartins/filebin
+Vcs-Git: https://github.com/rafaelmartins/filebin.git
+Rules-Requires-Root: no
+XS-Go-Import-Path: github.com/rafaelmartins/filebin
+X-Skip-Build-For: focal
+
+Package: filebin
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libmagic1
+Description: A minimalistic private pastebin that can handle binary files.
