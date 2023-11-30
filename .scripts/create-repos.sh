@@ -30,10 +30,6 @@ function reprepro_conf_sections() {
     echo
 }
 
-if [[ "x${CI:-}" = "xtrue" ]]; then
-    echo -e "${GPG_SIGNING_KEY}" | gpg --import --batch --no-tty
-fi
-
 pushd "${DEB_DIR}" > /dev/null
 
 for repo_name in *; do
