@@ -8,10 +8,6 @@ source "${SCRIPT_DIR}/utils.sh"
 DEB_DIR="$(realpath "${1}")"
 NEW_DIR="$(realpath "${2}")"
 
-if [[ ! -d "${NEW_DIR}" ]]; then
-    exit 0
-fi
-
 pushd "${DEB_DIR}" > /dev/null
 
 # cleanup removed repositories
@@ -52,6 +48,10 @@ for drepo in *; do
 done
 
 popd > /dev/null
+
+if [[ ! -d "${NEW_DIR}" ]]; then
+    exit 0
+fi
 
 pushd "${NEW_DIR}" > /dev/null
 
