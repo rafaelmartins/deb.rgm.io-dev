@@ -49,30 +49,28 @@ done
 
 popd > /dev/null
 
-if [[ ! -d "${NEW_DIR}" ]]; then
-    exit 0
+if [[ -d "${NEW_DIR}" ]]; then
+    pushd "${NEW_DIR}" > /dev/null
+
+    # add new files
+    for bdir in build--*; do
+        build_id="$(echo "${bdir}" | cut -d- -f3-)"
+        repo_name="$(echo "${build_id}" | cut -d' ' -f1)"
+        distro="$(echo "${build_id}" | cut -d' ' -f2)"
+        codename="$(echo "${distro}" | cut -d_ -f2)"
+
+        rm -rf "${DEB_DIR}/${repo_name}/${codename}"
+        mkdir -p "${DEB_DIR}/${repo_name}/${codename}"
+
+        cp \
+            -v \
+            -r \
+            "${bdir}/"* \
+            "${DEB_DIR}/${repo_name}/${codename}/"
+    done
+
+    popd > /dev/null
 fi
-
-pushd "${NEW_DIR}" > /dev/null
-
-# add new files
-for bdir in build--*; do
-    build_id="$(echo "${bdir}" | cut -d- -f3-)"
-    repo_name="$(echo "${build_id}" | cut -d' ' -f1)"
-    distro="$(echo "${build_id}" | cut -d' ' -f2)"
-    codename="$(echo "${distro}" | cut -d_ -f2)"
-
-    rm -rf "${DEB_DIR}/${repo_name}/${codename}"
-    mkdir -p "${DEB_DIR}/${repo_name}/${codename}"
-
-    cp \
-        -v \
-        -r \
-        "${bdir}/"* \
-        "${DEB_DIR}/${repo_name}/${codename}/"
-done
-
-popd > /dev/null
 
 if [[ "x${CI:-}" = "xtrue" ]]; then
     pushd "${DEB_DIR}" > /dev/null

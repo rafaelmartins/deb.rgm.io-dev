@@ -31,24 +31,22 @@ done
 popd > /dev/null
 
 if [[ ! -d "${NEW_DIR}" ]]; then
-    exit 0
+    pushd "${NEW_DIR}" > /dev/null
+
+    # add new files
+    for odir in orig--*; do
+        dir="$(echo "${odir}" | cut -d- -f3-)"
+        orig="$(basename "$(ls -1 "${odir}"/*.orig.* | head -n1)")"
+        if [[ -e "${ORIG_DIR}/${dir}/${orig}" ]]; then
+            continue
+        fi
+        rm -rf "${ORIG_DIR}/${dir}"
+        mkdir -p "${ORIG_DIR}/${dir}"
+        cp -v "${odir}/${orig}" "${ORIG_DIR}/${dir}/"
+    done
+
+    popd > /dev/null
 fi
-
-pushd "${NEW_DIR}" > /dev/null
-
-# add new files
-for odir in orig--*; do
-    dir="$(echo "${odir}" | cut -d- -f3-)"
-    orig="$(basename "$(ls -1 "${odir}"/*.orig.* | head -n1)")"
-    if [[ -e "${ORIG_DIR}/${dir}/${orig}" ]]; then
-        continue
-    fi
-    rm -rf "${ORIG_DIR}/${dir}"
-    mkdir -p "${ORIG_DIR}/${dir}"
-    cp -v "${odir}/${orig}" "${ORIG_DIR}/${dir}/"
-done
-
-popd > /dev/null
 
 if [[ "x${CI:-}" = "xtrue" ]]; then
     pushd "${ORIG_DIR}" > /dev/null
