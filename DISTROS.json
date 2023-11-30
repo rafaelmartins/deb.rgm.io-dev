@@ -3,7 +3,6 @@
         "debian_bookworm_12",
         "debian_trixie_13",
         "debian_sid",
-        "ubuntu_focal_11.0",
         "ubuntu_jammy_12.0",
         "ubuntu_mantic_12.3"
     ]
