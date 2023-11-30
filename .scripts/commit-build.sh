@@ -13,7 +13,7 @@ pushd "${DEB_DIR}" > /dev/null
 # cleanup removed repositories
 for drepo in *; do
     found=
-    for mrepo in $("${SCRIPT_DIR}/metadata-repos.sh" "${ROOT_DIR}"); do
+    for mrepo in $("${SCRIPT_DIR}/metadata-repos.sh"); do
         if [[ "${drepo}" = "${mrepo}" ]]; then
             found=1
             break

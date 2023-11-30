@@ -21,4 +21,4 @@ mkdir -p "${tmpdir}/${REPO_NAME}"
 "${ROOT_DIR}/${REPO_NAME}/orig.sh" "${tmpdir}/${REPO_NAME}"
 popd > /dev/null
 
-"${SCRIPT_DIR}/build.sh" "${ROOT_DIR}" "${tmpdir}" "${OUTPUT_DIR}" "${REPO_NAME}" "${DISTRO}"
+"${SCRIPT_DIR}/build.sh" "${tmpdir}" "${OUTPUT_DIR}" "${REPO_NAME}" "${DISTRO}"
