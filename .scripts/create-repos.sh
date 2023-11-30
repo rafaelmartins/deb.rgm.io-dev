@@ -30,13 +30,16 @@ function reprepro_conf_sections() {
     echo
 }
 
-gpg \
-    --armor \
-    --export-options export-minimal \
-    --export \
-    --output "${REPOS_DIR}/public.key"
-
 function sources_file() {
+    if [[ ! -e "${REPOS_DIR}/public.key" ]]; then
+        gpg \
+            --armor \
+            --export-options export-minimal \
+            --export \
+            --output "${REPOS_DIR}/public.key" \
+        1>&2
+    fi
+
     echo "Enabled: yes"
     echo "Types: deb deb-src"
     echo "URIs: https://deb.rgm.io/${1}/"
