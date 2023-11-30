@@ -1,4 +1,5 @@
-name: Build debian
+name: Update deb.rgm.io
+
 on:
   - push
   - workflow_dispatch
@@ -266,8 +267,10 @@ jobs:
           path: ./output
 
   deploy:
+    name: Deploy
     runs-on: ubuntu-22.04
-    needs: create-repos
+    needs:
+      - create-repos
 
     permissions:
       pages: write
