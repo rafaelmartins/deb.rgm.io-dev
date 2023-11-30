@@ -30,6 +30,23 @@ function reprepro_conf_sections() {
     echo
 }
 
+gpg \
+    --armor \
+    --export-options export-minimal \
+    --export \
+    --output "${REPOS_DIR}/public.key"
+
+function sources_file() {
+    echo "Enabled: yes"
+    echo "Types: deb deb-src"
+    echo "URIs: https://deb.rgm.io/${1}/"
+    echo "Suites: ${2}"
+    echo "Components: main"
+    echo "Architectures: amd64"
+    echo "Signed-By:"
+    cat "${REPOS_DIR}/public.key"
+}
+
 pushd "${DEB_DIR}" > /dev/null
 
 for repo_name in *; do
@@ -43,6 +60,10 @@ for repo_name in *; do
             "${repo_name}" \
             "${codename}" \
         >> "${REPOS_DIR}/${repo_name}/conf/distributions"
+        sources_file \
+            "${repo_name}" \
+            "${codename}" \
+        >> "${REPOS_DIR}/${repo_name}-${codename}.sources"
     done
 
     for codename in *; do
