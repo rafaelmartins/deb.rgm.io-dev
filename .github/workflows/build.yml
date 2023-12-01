@@ -249,6 +249,9 @@ jobs:
           GPG_SIGNING_KEY_ID: ${{ secrets.GPG_SIGNING_KEY_ID }}
         run: ./main/.scripts/create-repos.sh ./output ./deb
 
+      - name: Create index
+        run: ./main/.scripts/create-index.sh ./output ./deb
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
