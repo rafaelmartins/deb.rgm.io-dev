@@ -7,19 +7,7 @@ source "${SCRIPT_DIR}/utils.sh"
 
 OUTPUT_DIR="$(realpath "${1}")"
 
-version="$(
-    git describe \
-        --abbrev=4 \
-        HEAD \
-    | sed \
-        -e 's/^v//' \
-        -e 's/-/./' \
-        -e 's/-g/-/'
-)"
-
-git archive \
-    --format=tar \
-    --prefix="filebin-${version}/" \
-    HEAD \
-| xz \
-> "${OUTPUT_DIR}/filebin_${version}.orig.tar.xz"
+"${SCRIPT_DIR}/orig-golang-xz.sh" \
+    "${OUTPUT_DIR}" \
+    "filebin" \
+    "$("${SCRIPT_DIR}/orig-gitversion.sh")"
