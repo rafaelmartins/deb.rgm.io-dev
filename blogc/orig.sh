@@ -14,7 +14,7 @@ make dist-xz
 
 mv \
     blogc-*.tar.xz \
-    "$(
+    "${OUTPUT_DIR}/$(
         echo blogc-*.tar.xz \
         | sed \
             -e 's/blogc-/blogc_/' \
