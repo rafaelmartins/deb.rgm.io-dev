@@ -12,19 +12,11 @@ OUTPUT_DIR="$(realpath "${1:-.}")"
 ./configure
 make dist-xz
 
-version="$(
-    find \
-        . \
-        -type f \
-        -name blogc-\*.tar.xz \
-    | head -n 1 \
-    | rev \
-    | cut -d/ -f1 \
-    | rev \
-    | sed \
-        -e 's/^blogc-//' \
-        -e 's/\.tar\.xz$//'
-)"
-
-echo "${version}" > "${OUTPUT_DIR}/VERSION"
-mv blogc-*.tar.xz "${OUTPUT_DIR}/blogc_${version}.orig.tar.xz"
+mv \
+    blogc-*.tar.xz \
+    "$(
+        echo blogc-*.tar.xz \
+        | sed \
+            -e 's/blogc-/blogc_/' \
+            -e 's/\.tar\./.orig.tar./'
+    )"

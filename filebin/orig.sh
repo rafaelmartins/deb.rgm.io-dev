@@ -23,5 +23,3 @@ git archive \
     HEAD \
 | xz \
 > "${OUTPUT_DIR}/filebin_${version}.orig.tar.xz"
-
-echo "${version}" > "${OUTPUT_DIR}/VERSION"

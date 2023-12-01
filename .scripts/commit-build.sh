@@ -78,7 +78,7 @@ if [[ "x${CI:-}" = "xtrue" ]]; then
     git config user.email 'github-actions[bot]@users.noreply.github.com'
     git checkout --orphan temp
     git add .
-    git commit -m 'update build' || true
+    git commit -m 'update deb' || true
     git push --force origin HEAD:deb
     popd > /dev/null
 fi
