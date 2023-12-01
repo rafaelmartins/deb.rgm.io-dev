@@ -47,7 +47,11 @@ function sources_file() {
     echo "Components: main"
     echo "Architectures: amd64"
     echo "Signed-By:"
-    sed -e 's/^$/./' -e 's/^/ /' "${REPOS_DIR}/public.key"
+
+    sed \
+        -e 's/^$/./' \
+        -e 's/^/ /' \
+        "${REPOS_DIR}/public.key"
 }
 
 pushd "${DEB_DIR}" > /dev/null
