@@ -38,15 +38,11 @@ function header() {
     Example for <code>blogc</code> repository and <code>bookworm</code> distribution:
   </p>
   <pre><code>$ curl https://deb.rgm.io/blogc-bookworm.sources | sudo tee /etc/apt/sources.list.d/blogc.sources</code></pre>
-
-  <hr />
 EOF
 }
 
 function footer() {
     cat <<EOF
-  <hr />
-
   <footer>
     <p>
       Service maintained by <a href="https://rgm.io/">Rafael G. Martins</a>.
