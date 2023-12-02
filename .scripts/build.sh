@@ -25,11 +25,6 @@ trap 'rm -rf -- "${tmpdir}"' EXIT
 
 mkdir -p "${tmpdir}"/build{,deps}
 
-# FIXME: this could be moved to source phase
-pushd "${tmpdir}/builddeps" > /dev/null
-mk-build-deps "${ROOT_DIR}/${REPO_NAME%%-snapshot}/debian/control"
-popd > /dev/null
-
 source="$(basename "$(
     ls \
         -1 \
@@ -83,6 +78,7 @@ cp \
     .
 
 if ! dch \
+    --force-distribution \
     --distribution "${CODENAME}" \
     --newversion "${version}-${revision}~${suffix}" \
     "Automated build for ${CODENAME}"
@@ -92,9 +88,34 @@ fi
 
 popd > /dev/null
 
-for platform in linux/amd64 linux/arm64 linux/arm/v7; do
+function arch_to_platform() {
+    case "${1}" in
+        amd64)
+            echo "linux/amd64"
+            ;;
+
+        arm64)
+            echo "linux/arm64"
+            ;;
+
+        armhf)
+            echo "linux/arm/v7"
+            ;;
+    esac
+}
+
+for arch in amd64 arm64 armhf; do
+    rm -rf "${tmpdir}/builddeps"
+    mkdir -p "${tmpdir}/builddeps"
+
+    pushd "${tmpdir}/builddeps" > /dev/null
+    mk-build-deps \
+        --arch "${arch}" \
+        "${ROOT_DIR}/${REPO_NAME%%-snapshot}/debian/control"
+    popd > /dev/null
+
     docker run \
-        --platform="${platform}" \
+        --platform="$(arch_to_platform "${arch}")" \
         --pull=always \
         --rm \
         --init \
