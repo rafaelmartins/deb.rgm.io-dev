@@ -74,11 +74,13 @@ fi
 
 if [[ "x${CI:-}" = "xtrue" ]]; then
     pushd "${DEB_DIR}" > /dev/null
-    git config user.name 'github-actions[bot]'
-    git config user.email 'github-actions[bot]@users.noreply.github.com'
-    git checkout --orphan temp
-    git add .
-    git commit -m 'update deb' || true
-    git push --force origin HEAD:deb
+    if [[ $(git status --porcelain=v1 | wc -l) -gt 0 ]]; then
+        git config user.name 'github-actions[bot]'
+        git config user.email 'github-actions[bot]@users.noreply.github.com'
+        git checkout --orphan temp
+        git add .
+        git commit -m 'update deb' || true
+        git push --force origin HEAD:deb
+    fi
     popd > /dev/null
 fi
