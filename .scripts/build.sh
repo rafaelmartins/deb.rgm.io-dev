@@ -6,7 +6,6 @@ export DEBEMAIL="rafael+deb@rafaelmartins.eng.br"
 export DEBFULLNAME="Automatic Builder (github-actions)"
 
 NUM_ARGS=4
-DEPENDENCIES="devscripts equivs"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 source "${SCRIPT_DIR}/utils.sh"
@@ -25,10 +24,28 @@ trap 'rm -rf -- "${tmpdir}"' EXIT
 
 mkdir -p "${tmpdir}"/build{,deps}
 
-# FIXME: this could be moved to source phase
-pushd "${tmpdir}/builddeps" > /dev/null
-mk-build-deps "${ROOT_DIR}/${REPO_NAME%%-snapshot}/debian/control"
-popd > /dev/null
+for platform in linux/amd64 linux/arm64 linux/arm/v7; do
+    docker run \
+        --platform="${platform}" \
+        --pull=always \
+        --rm \
+        --init \
+        --env DEB_BUILD_OPTIONS=noddebs \
+        --env DEBIAN_FRONTEND=noninteractive \
+        --volume "${ROOT_DIR}/${REPO_NAME%%-snapshot}:/src" \
+        --volume "${tmpdir}/builddeps:/builddeps" \
+        --workdir "/build/$(basename "${builddir}")" \
+        "${IMAGE}" \
+        bash \
+            -c "\
+                set -Eeuo pipefail; \
+                trap 'chown -R $(id -u):$(id -g) /builddeps' EXIT; \
+                apt update \
+                    && apt install -y devscripts equivs \
+                    && cd /builddeps \
+                    && mk-build-deps /src/debian/control; \
+            "
+done
 
 source="$(basename "$(
     ls \
@@ -83,6 +100,7 @@ cp \
     .
 
 if ! dch \
+    --force-distribution \
     --distribution "${CODENAME}" \
     --newversion "${version}-${revision}~${suffix}" \
     "Automated build for ${CODENAME}"
