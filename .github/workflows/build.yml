@@ -183,6 +183,9 @@ jobs:
           ref: orig
           path: orig
 
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v3
+
       - name: Build
         if: ${{ matrix.build != 'placeholder' }}
         run: ./main/.scripts/build.sh ./orig ./output ${{ matrix.build }}

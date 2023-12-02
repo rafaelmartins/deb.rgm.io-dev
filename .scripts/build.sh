@@ -92,25 +92,27 @@ fi
 
 popd > /dev/null
 
-docker run \
-    --pull=always \
-    --rm \
-    --init \
-    --env DEB_BUILD_OPTIONS=noddebs \
-    --env DEBIAN_FRONTEND=noninteractive \
-    --volume "${tmpdir}/build:/build" \
-    --volume "${tmpdir}/builddeps:/builddeps" \
-    --workdir "/build/$(basename "${builddir}")" \
-    "${IMAGE}" \
-    bash \
-        -c "\
-            set -Eeuo pipefail; \
-            trap 'chown -R $(id -u):$(id -g) /build' EXIT; \
-            apt update \
-                && apt install -y --no-install-recommends /builddeps/*.deb \
-                && dpkg-buildpackage -uc -us -sa; \
-        "
-
+for platform in linux/amd64 linux/arm64 linux/arm/v7; do
+    docker run \
+        --platform="${platform}" \
+        --pull=always \
+        --rm \
+        --init \
+        --env DEB_BUILD_OPTIONS=noddebs \
+        --env DEBIAN_FRONTEND=noninteractive \
+        --volume "${tmpdir}/build:/build" \
+        --volume "${tmpdir}/builddeps:/builddeps" \
+        --workdir "/build/$(basename "${builddir}")" \
+        "${IMAGE}" \
+        bash \
+            -c "\
+                set -Eeuo pipefail; \
+                trap 'chown -R $(id -u):$(id -g) /build' EXIT; \
+                apt update \
+                    && apt install -y --no-install-recommends /builddeps/*.deb \
+                    && dpkg-buildpackage -uc -us -sa; \
+            "
+done
 mkdir -p "${OUTPUT_DIR}"
 
 find \
