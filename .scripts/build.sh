@@ -106,7 +106,7 @@ for platform in linux/amd64 linux/arm64 linux/arm/v7; do
                 set -Eeuo pipefail; \
                 trap 'chown -R $(id -u):$(id -g) /builddeps' EXIT; \
                 apt update \
-                    && apt install -y devtools equivs \
+                    && apt install -y devscripts equivs \
                     && mk-build-deps /src/debian/control; \
             "
 
