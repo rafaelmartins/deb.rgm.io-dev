@@ -6,7 +6,7 @@ export DEBEMAIL="rafael+deb@rafaelmartins.eng.br"
 export DEBFULLNAME="Automatic Builder (github-actions)"
 
 NUM_ARGS=4
-DEPENDENCIES="devscripts equivs"
+DEPENDENCIES="devscripts"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 source "${SCRIPT_DIR}/utils.sh"
@@ -23,7 +23,7 @@ IMAGE="$("${SCRIPT_DIR}/distro-docker-image.sh" "${CODENAME}")"
 tmpdir="$(mktemp -d)"
 trap 'rm -rf -- "${tmpdir}"' EXIT
 
-mkdir -p "${tmpdir}"/build{,deps}
+mkdir -p "${tmpdir}/build"
 
 source="$(basename "$(
     ls \
@@ -88,34 +88,30 @@ fi
 
 popd > /dev/null
 
-function arch_to_platform() {
-    case "${1}" in
-        amd64)
-            echo "linux/amd64"
-            ;;
-
-        arm64)
-            echo "linux/arm64"
-            ;;
-
-        armhf)
-            echo "linux/arm/v7"
-            ;;
-    esac
-}
-
-for arch in amd64 arm64 armhf; do
+for platform in linux/amd64 linux/arm64 linux/arm/v7; do
     rm -rf "${tmpdir}/builddeps"
     mkdir -p "${tmpdir}/builddeps"
 
-    pushd "${tmpdir}/builddeps" > /dev/null
-    mk-build-deps \
-        --arch "${arch}" \
-        "${ROOT_DIR}/${REPO_NAME%%-snapshot}/debian/control"
-    popd > /dev/null
+    docker run \
+        --platform="${platform}" \
+        --pull=always \
+        --rm \
+        --init \
+        --volume "${ROOT_DIR}/${REPO_NAME%%-snapshot}:/src" \
+        --volume "${tmpdir}/builddeps:/builddeps" \
+        --workdir /builddeps \
+        "${IMAGE}" \
+        bash \
+            -c "\
+                set -Eeuo pipefail; \
+                trap 'chown -R $(id -u):$(id -g) /builddeps' EXIT; \
+                apt update \
+                    && apt install -y equivs \
+                    && mk-build-deps /src/debian/control; \
+            "
 
     docker run \
-        --platform="$(arch_to_platform "${arch}")" \
+        --platform="${platform}" \
         --pull=always \
         --rm \
         --init \
