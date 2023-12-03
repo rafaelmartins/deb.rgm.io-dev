@@ -155,15 +155,48 @@ jobs:
 
       - name: Generate build matrix
         id: matrix
-        run: |
-          build="$(./main/.scripts/discover-build.sh ./orig ./deb)"
-          echo "build=${build}" >> $GITHUB_OUTPUT
+        run: ./main/.scripts/discover-build.sh ./orig ./deb
+
+  build-deps:
+    name: Generate build dependencies .deb
+    runs-on: ubuntu-22.04
+    needs:
+      - metadata-build
+
+    strategy:
+      matrix:
+        build: ${{ fromJSON(needs.metadata-build.outputs.bdeps) }}
+
+    steps:
+      - name: Check out code
+        if: ${{ matrix.build != 'placeholder' }}
+        uses: actions/checkout@v4
+        with:
+          path: main
+
+      - name: Setup QEMU
+        if: ${{ matrix.build != 'placeholder' }}
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
+      - name: Run mk-build-deps
+        if: ${{ matrix.build != 'placeholder' }}
+        run: ./main/.scripts/build-deps.sh ./output ${{ matrix.build }}
+
+      - name: Upload build artifacts
+        if: ${{ matrix.build != 'placeholder' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: bdeps--${{ matrix.build }}
+          path: output
 
   build:
     name: Build
     runs-on: ubuntu-22.04
     needs:
       - metadata-build
+      - build-deps
 
     strategy:
       matrix:
@@ -183,12 +216,21 @@ jobs:
           ref: orig
           path: orig
 
+      - name: Download build artifacts
+        if: ${{ matrix.build != 'placeholder' }}
+        uses: actions/download-artifact@v3
+        with:
+          path: new
+
       - name: Setup QEMU
+        if: ${{ matrix.build != 'placeholder' }}
         uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
 
       - name: Build
         if: ${{ matrix.build != 'placeholder' }}
-        run: ./main/.scripts/build.sh ./orig ./output ${{ matrix.build }}
+        run: ./main/.scripts/build.sh ./orig ./new ./output ${{ matrix.build }}
 
       - name: Upload build artifacts
         if: ${{ matrix.build != 'placeholder' }}

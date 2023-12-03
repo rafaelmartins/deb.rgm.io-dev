@@ -8,6 +8,7 @@ source "${SCRIPT_DIR}/utils.sh"
 ORIG_DIR="$(realpath "${1}")"
 DEB_DIR="$(realpath "${2}")"
 
+bdeps=()
 build=()
 for repo in $("${SCRIPT_DIR}/metadata-repos.sh"); do
     chl_version_rev="$("${SCRIPT_DIR}/metadata-changelog-version-rev.sh" "${repo}")"
@@ -25,6 +26,7 @@ for repo in $("${SCRIPT_DIR}/metadata-repos.sh"); do
         if [[ "${chl_version}" = "${orig_version}" ]]; then
             deb_version_rev="$("${SCRIPT_DIR}/metadata-deb-version-rev.sh" "${DEB_DIR}" "${repo}" "${codename}")"
             if [[ "${chl_version_rev}" != "${deb_version_rev}" ]]; then
+                bdeps+=("${repo}")
                 build+=("${repo} ${distro}")
             fi
         fi
@@ -33,16 +35,38 @@ for repo in $("${SCRIPT_DIR}/metadata-repos.sh"); do
         deb_version_rev="$("${SCRIPT_DIR}/metadata-deb-version-rev.sh" "${DEB_DIR}" "${repo}-snapshot" "${codename}")"
         orig_ss_version_rev="${orig_ss_version}-$(echo "${chl_version_rev}" | rev | cut -d- -f1 | rev)"
         if [[ "${deb_version_rev}" != "${orig_ss_version_rev}" ]]; then
+            bdeps+=("${repo}")
             build+=("${repo}-snapshot ${distro}")
         fi
     done
 done
 
+if [[ "${#bdeps[@]}" -eq 0 ]]; then
+    bdeps+=("placeholder")
+fi
+
 if [[ "${#build[@]}" -eq 0 ]]; then
     build+=("placeholder")
 fi
 
-jq \
-    -cnM \
-    '$ARGS.positional' \
-    --args "${build[@]}"
+sbdeps="bdeps=$(
+    jq \
+        -cnM \
+        '$ARGS.positional | unique' \
+        --args "${bdeps[@]}"
+)"
+
+sbuild="build=$(
+    jq \
+        -cnM \
+        '$ARGS.positional' \
+        --args "${build[@]}"
+)"
+
+if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
+    echo "${sbdeps}" >> "${GITHUB_OUTPUT}"
+    echo "${sbuild}" >> "${GITHUB_OUTPUT}"
+else
+    echo "${sbdeps}"
+    echo "${sbuild}"
+fi
