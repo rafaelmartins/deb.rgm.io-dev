@@ -133,7 +133,7 @@ jobs:
       - commit-orig
 
     outputs:
-      bdeps: ${{ steps.matrix.outcome.bdeps }}
+      bdeps: ${{ steps.matrix.outputs.bdeps }}
       build: ${{ steps.matrix.outputs.build }}
 
     steps:
