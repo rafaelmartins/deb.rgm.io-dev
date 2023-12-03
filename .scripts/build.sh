@@ -5,7 +5,7 @@ set -x
 export DEBEMAIL="rafael+deb@rafaelmartins.eng.br"
 export DEBFULLNAME="Automatic Builder (github-actions)"
 
-NUM_ARGS=4
+NUM_ARGS=5
 DEPENDENCIES="devscripts"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
@@ -89,28 +89,7 @@ fi
 
 popd > /dev/null
 
-for platform in linux/amd64 linux/arm64 linux/arm/v7; do
-    rm -rf "${tmpdir}/builddeps"
-    mkdir -p "${tmpdir}/builddeps"
-
-    docker run \
-        --platform="${platform}" \
-        --pull=always \
-        --rm \
-        --init \
-        --volume "${ROOT_DIR}/${REPO_NAME%%-snapshot}:/src" \
-        --volume "${tmpdir}/builddeps:/builddeps" \
-        --workdir /builddeps \
-        "${IMAGE}" \
-        bash \
-            -c "\
-                set -Eeuo pipefail; \
-                trap 'chown -R $(id -u):$(id -g) /builddeps' EXIT; \
-                apt update \
-                    && apt install -y devscripts equivs \
-                    && mk-build-deps /src/debian/control; \
-            "
-
+for platform in linux/amd64 linux/arm64; do
     docker run \
         --platform="${platform}" \
         --pull=always \
@@ -119,7 +98,7 @@ for platform in linux/amd64 linux/arm64 linux/arm/v7; do
         --env DEB_BUILD_OPTIONS=noddebs \
         --env DEBIAN_FRONTEND=noninteractive \
         --volume "${tmpdir}/build:/build" \
-        --volume "${tmpdir}/builddeps:/builddeps" \
+        --volume "${NEW_DIR}/bdeps--${repo_name}/$(basename "${platform}"):/builddeps" \
         --workdir "/build/$(basename "${builddir}")" \
         "${IMAGE}" \
         bash \
@@ -131,6 +110,7 @@ for platform in linux/amd64 linux/arm64 linux/arm/v7; do
                     && dpkg-buildpackage -uc -us -sa; \
             "
 done
+
 mkdir -p "${OUTPUT_DIR}"
 
 find \
