@@ -98,7 +98,7 @@ for platform in linux/amd64 linux/arm64; do
         --env DEB_BUILD_OPTIONS=noddebs \
         --env DEBIAN_FRONTEND=noninteractive \
         --volume "${tmpdir}/build:/build" \
-        --volume "${NEW_DIR}/bdeps--${REPO_NAME}/$(basename "${platform}"):/builddeps" \
+        --volume "${NEW_DIR}/bdeps--${REPO_NAME%%-snapshot}/$(basename "${platform}"):/builddeps" \
         --workdir "/build/$(basename "${builddir}")" \
         "${IMAGE}" \
         bash \
