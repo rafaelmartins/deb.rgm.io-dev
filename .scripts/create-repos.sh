@@ -17,7 +17,7 @@ function reprepro_conf_sections() {
     echo "Origin: ${1}"
     echo "Label: ${1}"
     echo "Codename: ${2}"
-    echo "Architectures: source amd64"
+    echo "Architectures: source amd64 arm64"
     echo "Components: main"
     if [[ "${1}" = *-snapshot ]]; then
         echo "Description: apt repository for ${1} snapshots"
@@ -45,7 +45,7 @@ function sources_file() {
     echo "URIs: https://deb.rgm.io/${1}/"
     echo "Suites: ${2}"
     echo "Components: main"
-    echo "Architectures: amd64"
+    echo "Architectures: amd64 arm64"
     echo "Signed-By:"
 
     sed \
