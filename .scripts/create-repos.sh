@@ -75,7 +75,11 @@ for repo_name in *; do
 
     for codename in *; do
         pushd "${REPOS_DIR}/${repo_name}" > /dev/null
-        reprepro include "${codename}" "${DEB_DIR}/${repo_name}/${codename}"/*.changes
+        if ls "${DEB_DIR}/${repo_name}/${codename}"/*.changes &> /dev/null; then
+            for ch in "${DEB_DIR}/${repo_name}/${codename}"/*.changes; do
+                reprepro include "${codename}" "${ch}"
+            done
+        fi
         popd > /dev/null
     done
 
