@@ -35,9 +35,9 @@ function header() {
     file to <code>/etc/apt/sources.list.d</code>.
   </p>
   <p>
-    Example for <code>blogc</code> repository and <code>bookworm</code> distribution:
+    Example for <code>blogc</code> repository:
   </p>
-  <pre><code>$ curl https://deb.rgm.io/blogc-bookworm.sources | sudo tee /etc/apt/sources.list.d/blogc.sources</code></pre>
+  <pre><code>$ curl "https://deb.rgm.io/blogc-$(lsb_release -cs).sources" | sudo tee /etc/apt/sources.list.d/blogc.sources</code></pre>
 EOF
 }
 
