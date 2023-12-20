@@ -5,7 +5,7 @@ set -x
 export DEBEMAIL="rafael+deb@rafaelmartins.eng.br"
 export DEBFULLNAME="Automatic Builder (github-actions)"
 
-NUM_ARGS=5
+NUM_ARGS=6
 DEPENDENCIES="devscripts"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
@@ -16,8 +16,9 @@ NEW_DIR="$(realpath "${2}")"
 OUTPUT_DIR="$(realpath "${3}")"
 REPO_NAME="${4}"
 DISTRO="${5}"
+ARCH="${6}"
 
-CODENAME="$(echo "${5}" | cut -d_ -f2)"
+CODENAME="$(echo "${DISTRO}" | cut -d_ -f2)"
 
 IMAGE="$("${SCRIPT_DIR}/distro-docker-image.sh" "${CODENAME}")"
 
@@ -89,27 +90,25 @@ fi
 
 popd > /dev/null
 
-for platform in linux/amd64 linux/arm64; do
-    docker run \
-        --platform="${platform}" \
-        --pull=always \
-        --rm \
-        --init \
-        --env DEB_BUILD_OPTIONS=noddebs \
-        --env DEBIAN_FRONTEND=noninteractive \
-        --volume "${tmpdir}/build:/build" \
-        --volume "${NEW_DIR}/bdeps--${REPO_NAME%%-snapshot}/$(basename "${platform}"):/builddeps" \
-        --workdir "/build/$(basename "${builddir}")" \
-        "${IMAGE}" \
-        bash \
-            -c "\
-                set -Eeuo pipefail; \
-                trap 'chown -R $(id -u):$(id -g) /build' EXIT; \
-                apt update \
-                    && apt install -y --no-install-recommends /builddeps/*.deb \
-                    && dpkg-buildpackage -uc -us -sa; \
-            "
-done
+docker run \
+    --platform="linux/${ARCH}" \
+    --pull=always \
+    --rm \
+    --init \
+    --env DEB_BUILD_OPTIONS=noddebs \
+    --env DEBIAN_FRONTEND=noninteractive \
+    --volume "${tmpdir}/build:/build" \
+    --volume "${NEW_DIR}:/builddeps" \
+    --workdir "/build/$(basename "${builddir}")" \
+    "${IMAGE}" \
+    bash \
+        -c "\
+            set -Eeuo pipefail; \
+            trap 'chown -R $(id -u):$(id -g) /build' EXIT; \
+            apt update \
+                && apt install -y --no-install-recommends /builddeps/*.deb \
+                && dpkg-buildpackage -uc -us -sa; \
+        "
 
 mkdir -p "${OUTPUT_DIR}"
 

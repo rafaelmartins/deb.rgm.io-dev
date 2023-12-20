@@ -4,9 +4,9 @@ on:
   push:
   workflow_dispatch:
     inputs:
-      arm64-snapshots:
+      force-arm64-snapshots:
         type: boolean
-        description: Build arm64 packages for snapshots
+        description: Force build ARM64 packages for snapshots
 
 permissions: read-all
 
@@ -19,7 +19,7 @@ defaults:
     shell: bash
 
 env:
-  FORCE_ARM64: ${{ github.event_name == 'schedule' }}
+  FORCE_ARM64_SNAPSHOTS: ${{ github.event_name == 'schedule' || inputs.force-arm64-snapshots }}
 
 jobs:
   metadata-orig:
@@ -176,6 +176,11 @@ jobs:
         build: ${{ fromJSON(needs.metadata-build.outputs.bdeps) }}
 
     steps:
+      - name: Parse metadata
+        if: ${{ matrix.build != 'placeholder' }}
+        id: metadata
+        run: echo "arch=$(echo ${{ matrix.build }} | cut -d' ' -f3)" >> $GITHUB_OUTPUT
+
       - name: Check out code
         if: ${{ matrix.build != 'placeholder' }}
         uses: actions/checkout@v4
@@ -183,7 +188,7 @@ jobs:
           path: main
 
       - name: Setup QEMU
-        if: ${{ matrix.build != 'placeholder' }}
+        if: ${{ matrix.build != 'placeholder' && steps.metadata.outputs.arch == 'arm64' }}
         uses: docker/setup-qemu-action@v3
         with:
           platforms: arm64
@@ -192,7 +197,7 @@ jobs:
         if: ${{ matrix.build != 'placeholder' }}
         run: ./main/.scripts/build-deps.sh ./output ${{ matrix.build }}
 
-      - name: Upload build artifacts
+      - name: Upload dependency artifacts
         if: ${{ matrix.build != 'placeholder' }}
         uses: actions/upload-artifact@v3
         with:
@@ -211,6 +216,13 @@ jobs:
         build: ${{ fromJSON(needs.metadata-build.outputs.build) }}
 
     steps:
+      - name: Parse metadata
+        if: ${{ matrix.build != 'placeholder' }}
+        id: metadata
+        run: |
+          echo "repodir=$(echo ${{ matrix.build }} | cut -d' ' -f1 | sed -e 's/-snapshot$//')" >> $GITHUB_OUTPUT
+          echo "arch=$(echo ${{ matrix.build }} | cut -d' ' -f3)" >> $GITHUB_OUTPUT
+
       - name: Check out code
         if: ${{ matrix.build != 'placeholder' }}
         uses: actions/checkout@v4
@@ -224,14 +236,15 @@ jobs:
           ref: orig
           path: orig
 
-      - name: Download build artifacts
+      - name: Download dependency artifacts
         if: ${{ matrix.build != 'placeholder' }}
         uses: actions/download-artifact@v3
         with:
+          name: bdeps--${{ steps.metadata.outputs.repodir }} ${{ steps.metadata.outputs.arch }}
           path: new
 
       - name: Setup QEMU
-        if: ${{ matrix.build != 'placeholder' }}
+        if: ${{ matrix.build != 'placeholder' && steps.metadata.outputs.arch == 'arm64' }}
         uses: docker/setup-qemu-action@v3
         with:
           platforms: arm64
