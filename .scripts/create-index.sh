@@ -37,7 +37,7 @@ function header() {
   <p>
     Example for <code>blogc</code> repository:
   </p>
-  <pre><code>$ curl "https://deb.rgm.io/blogc-$(lsb_release -cs).sources" | sudo tee /etc/apt/sources.list.d/blogc.sources</code></pre>
+  <pre><code>$ curl "https://deb.rgm.io/blogc-\$(lsb_release -cs).sources" | sudo tee /etc/apt/sources.list.d/blogc.sources</code></pre>
 EOF
 }
 
