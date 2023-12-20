@@ -57,9 +57,10 @@ if ls "${NEW_DIR}"/build--* &> /dev/null; then
         build_id="$(echo "${bdir}" | cut -d- -f3-)"
         repo_name="$(echo "${build_id}" | cut -d' ' -f1)"
         distro="$(echo "${build_id}" | cut -d' ' -f2)"
+        arch="$(echo "${build_id}" | cut -d' ' -f3)"
         codename="$(echo "${distro}" | cut -d_ -f2)"
 
-        rm -rf "${DEB_DIR}/${repo_name}/${codename}"
+        rm -f "${DEB_DIR}/${repo_name}/${codename}/"*"_${arch}."*
         mkdir -p "${DEB_DIR}/${repo_name}/${codename}"
 
         cp \
