@@ -179,7 +179,7 @@ jobs:
       - name: Parse metadata
         if: ${{ matrix.build != 'placeholder' }}
         id: metadata
-        run: echo "arch=$(echo ${{ matrix.build }} | cut -d' ' -f3)" >> $GITHUB_OUTPUT
+        run: echo "arch=$(echo ${{ matrix.build }} | cut -d' ' -f2)" >> $GITHUB_OUTPUT
 
       - name: Check out code
         if: ${{ matrix.build != 'placeholder' }}
