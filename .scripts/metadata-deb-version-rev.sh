@@ -10,7 +10,7 @@ REPO_NAME="${2}"
 CODENAME="${3}"
 ARCH="${4}"
 
-pushd "${DEB_DIR}/${REPO_NAME}/${CODENAME}" > /dev/null
+pushd "${DEB_DIR}/${REPO_NAME}/${CODENAME}" > /dev/null || exit 0
 
 ls \
     -1 \
