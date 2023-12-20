@@ -1,8 +1,12 @@
 name: Update deb.rgm.io
 
 on:
-  - push
-  - workflow_dispatch
+  push:
+  workflow_dispatch:
+    inputs:
+      arm64-snapshots:
+        type: boolean
+        description: Build arm64 packages for snapshots
 
 permissions: read-all
 
@@ -13,6 +17,9 @@ concurrency:
 defaults:
   run:
     shell: bash
+
+env:
+  FORCE_ARM64: ${{ github.event_name == 'schedule' }}
 
 jobs:
   metadata-orig:
