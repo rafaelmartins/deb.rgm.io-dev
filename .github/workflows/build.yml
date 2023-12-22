@@ -161,9 +161,15 @@ jobs:
           ref: deb
           path: deb
 
-      - name: Generate build matrix
+      - name: Generate build matrix and changelogs
         id: matrix
-        run: ./main/.scripts/discover-build.sh ./orig ./deb
+        run: ./main/.scripts/discover-build.sh ./orig ./deb ./changelogs
+
+      - name: Upload changelogs artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: changelogs
+          path: changelogs
 
   build-deps:
     name: Generate build dependencies .deb

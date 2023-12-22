@@ -12,14 +12,19 @@ ARCH="${4}"
 
 pushd "${DEB_DIR}/${REPO_NAME}/${CODENAME}" &> /dev/null || exit 0
 
-ls \
-    -1 \
-    "${REPO_NAME%%-snapshot}_"*"${CODENAME}_${ARCH}.deb" \
-2> /dev/null \
-| cut -d_ -f2 \
-| cut -d~ -f1 \
-| sort -u \
-| head -n1 \
-|| true
+f=
+if [[ "${ARCH}" = source ]]; then
+    f="$(ls -1 "${REPO_NAME%%-snapshot}_"*"${CODENAME}.debian.tar."* 2> /dev/null || true)"
+else
+    f="$(ls -1 "${REPO_NAME%%-snapshot}_"*"${CODENAME}_${ARCH}.deb" 2> /dev/null || true)"
+fi
+
+if [[ -n "${f}" ]]; then
+    echo "${f}" \
+    | cut -d_ -f2 \
+    | cut -d~ -f1 \
+    | sort -u \
+    | head -n1
+fi
 
 popd > /dev/null
