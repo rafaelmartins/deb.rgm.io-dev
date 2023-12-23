@@ -29,20 +29,20 @@ for repo in $("${SCRIPT_DIR}/metadata-repos.sh"); do
         fi
 
         for arch in amd64 arm64 source; do
-            # release repository
-            if [[ "${chl_version}" = "${orig_version}" ]]; then
-                deb_version_rev="$("${SCRIPT_DIR}/metadata-deb-version-rev.sh" "${DEB_DIR}" "${repo}" "${codename}" "${arch}")"
-                if [[ -z "${deb_version_rev}" ]] || [[ "${chl_version_rev}" != "${deb_version_rev}" ]]; then
-                    build+=("${repo} ${distro} ${arch}")
-                    changelog["${repo} ${distro} ${chl_version_rev}"]=0
-                    if [[ "${arch}" != source ]]; then
-                        bdeps+=("${repo} ${arch}")
+            if [[ "${arch}" != arm64 ]] || [[ "${FORCE_ARM64_SNAPSHOTS:-}" == true ]]; then
+                # release repository
+                if [[ "${chl_version}" = "${orig_version}" ]]; then
+                    deb_version_rev="$("${SCRIPT_DIR}/metadata-deb-version-rev.sh" "${DEB_DIR}" "${repo}" "${codename}" "${arch}")"
+                    if [[ -z "${deb_version_rev}" ]] || [[ "${chl_version_rev}" != "${deb_version_rev}" ]]; then
+                        build+=("${repo} ${distro} ${arch}")
+                        changelog["${repo} ${distro} ${chl_version_rev}"]=0
+                        if [[ "${arch}" != source ]]; then
+                            bdeps+=("${repo} ${arch}")
+                        fi
                     fi
                 fi
-            fi
 
-            # snapshot repository
-            if [[ "${arch}" != arm64 ]] || [[ "${FORCE_ARM64_SNAPSHOTS:-}" == true ]]; then
+                # snapshot repository
                 deb_version_rev="$("${SCRIPT_DIR}/metadata-deb-version-rev.sh" "${DEB_DIR}" "${repo}-snapshot" "${codename}" "${arch}")"
                 orig_ss_version_rev="${orig_ss_version}-$(echo "${chl_version_rev}" | rev | cut -d- -f1 | rev)"
                 if [[ -z "${deb_version_rev}" ]] || [[ "${deb_version_rev}" != "${orig_ss_version_rev}" ]]; then

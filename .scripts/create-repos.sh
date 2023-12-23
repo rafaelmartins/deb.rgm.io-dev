@@ -80,6 +80,9 @@ for repo_name in *; do
                 reprepro include "${codename}" "${ch}"
             done
         fi
+        if ls "${DEB_DIR}/${repo_name}/${codename}"/*.dsc &> /dev/null; then
+            reprepro includedsc "${codename}" "${DEB_DIR}/${repo_name}/${codename}"/*.dsc
+        fi
         popd > /dev/null
     done
 

@@ -60,7 +60,11 @@ if ls "${NEW_DIR}"/build--* &> /dev/null; then
         arch="$(echo "${build_id}" | cut -d' ' -f3)"
         codename="$(echo "${distro}" | cut -d_ -f2)"
 
-        rm -f "${DEB_DIR}/${repo_name}/${codename}/"*"_${arch}."*
+        if [[ "${arch}" = source ]]; then
+            rm -f "${DEB_DIR}/${repo_name}/${codename}/"*{.debian.tar.*,.dsc}
+        else
+            rm -f "${DEB_DIR}/${repo_name}/${codename}/"*"_${arch}."*
+        fi
         mkdir -p "${DEB_DIR}/${repo_name}/${codename}"
 
         cp \
