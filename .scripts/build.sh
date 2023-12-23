@@ -92,6 +92,10 @@ if [[ "${ARCH}" != source ]]; then
         -maxdepth 1 \
         -type f \
         -exec cp -- "{}" "${OUTPUT_DIR}/" \;
+
+    rm \
+        --force \
+        "${OUTPUT_DIR}/"*.orig.tar.*
 else
     pushd "${builddir}" > /dev/null
     dpkg-source --build .
@@ -103,7 +107,3 @@ else
         -type f \
         -exec cp -- "{}" "${OUTPUT_DIR}/" \;
 fi
-
-rm \
-    --force \
-    "${OUTPUT_DIR}/"*.orig.tar.*

@@ -57,6 +57,9 @@ for repo in $("${SCRIPT_DIR}/metadata-repos.sh"); do
     done
 done
 
+mkdir -p "${OUTPUT_DIR}"
+touch "${OUTPUT_DIR}/.keep"
+
 for c in "${!changelog[@]}"; do
     "${SCRIPT_DIR}/create-changelog.sh" \
         "${OUTPUT_DIR}" \
@@ -65,11 +68,11 @@ for c in "${!changelog[@]}"; do
     1>&2
 done
 
-if [[ -z "" ]]; then
+if [[ "${#bdeps[@]}" -eq 0 ]]; then
     bdeps+=("placeholder")
 fi
 
-if [[ ! -v build[@] ]]; then
+if [[ "${#build[@]}" -eq 0 ]]; then
     build+=("placeholder")
 fi
 
