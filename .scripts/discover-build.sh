@@ -13,8 +13,8 @@ ORIG_DIR="$(realpath "${1}")"
 DEB_DIR="$(realpath "${2}")"
 OUTPUT_DIR="$(realpath "${3}")"
 
-bdeps=()
-build=()
+declare -a bdeps
+declare -a build
 declare -A changelog
 for repo in $("${SCRIPT_DIR}/metadata-repos.sh"); do
     chl_version_rev="$("${SCRIPT_DIR}/metadata-changelog-version-rev.sh" "${repo}")"
@@ -65,11 +65,11 @@ for c in "${!changelog[@]}"; do
     1>&2
 done
 
-if [[ -z "" ]]; then
+if [[ "${#bdeps[@]}" -eq 0 ]]; then
     bdeps+=("placeholder")
 fi
 
-if [[ ! -v build[@] ]]; then
+if [[ "${#build[@]}" -eq 0 ]]; then
     build+=("placeholder")
 fi
 
@@ -85,7 +85,7 @@ sbuild="build=$(
         -cnM \
         '$ARGS.positional' \
         --args "${build[@]}"
-)"q
+)"
 
 if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
     echo "${sbdeps}" >> "${GITHUB_OUTPUT}"
