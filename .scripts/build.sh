@@ -84,7 +84,7 @@ if [[ "${ARCH}" != source ]]; then
                 trap 'chown -R $(id -u):$(id -g) /build' EXIT; \
                 apt update \
                     && apt install -y --no-install-recommends /builddeps/*.deb \
-                    && dpkg-buildpackage -uc -us -sa; \
+                    && dpkg-buildpackage --build=binary -uc -us -sa; \
             "
 
     find \
