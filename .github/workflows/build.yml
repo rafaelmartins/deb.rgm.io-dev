@@ -243,7 +243,7 @@ jobs:
           path: orig
 
       - name: Download dependency artifacts
-        if: ${{ matrix.build != 'placeholder' }}
+        if: ${{ matrix.build != 'placeholder' && steps.metadata.outputs.arch != 'source' }}
         uses: actions/download-artifact@v3
         with:
           name: bdeps--${{ steps.metadata.outputs.repodir }} ${{ steps.metadata.outputs.arch }}
