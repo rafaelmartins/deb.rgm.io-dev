@@ -35,7 +35,7 @@ for repo in $("${SCRIPT_DIR}/metadata-repos.sh"); do
                 if [[ -z "${deb_version_rev}" ]] || [[ "${chl_version_rev}" != "${deb_version_rev}" ]]; then
                     build+=("${repo} ${distro} ${arch}")
                     if [[ "${arch}" = source ]]; then
-                        changelog+=("${repo} ${distro}")
+                        changelog+=("${repo} ${distro} ${chl_version_rev}")
                     else
                         bdeps+=("${repo} ${arch}")
                     fi
@@ -49,7 +49,7 @@ for repo in $("${SCRIPT_DIR}/metadata-repos.sh"); do
                 if [[ -z "${deb_version_rev}" ]] || [[ "${deb_version_rev}" != "${orig_ss_version_rev}" ]]; then
                     build+=("${repo}-snapshot ${distro} ${arch}")
                     if [[ "${arch}" = source ]]; then
-                        changelog+=("${repo}-snapshot ${distro}")
+                        changelog+=("${repo}-snapshot ${distro} ${orig_ss_version_rev}")
                     else
                         bdeps+=("${repo} ${arch}")
                     fi
@@ -60,30 +60,10 @@ for repo in $("${SCRIPT_DIR}/metadata-repos.sh"); do
 done
 
 for c in "${changelog[@]}"; do
-    repo="$(echo "${c}" | cut -d' ' -f1)"
-    distro="$(echo "${c}" | cut -d' ' -f2)"
-    codename="$(echo "${distro}" | cut -d_ -f2)"
-    ver="$(echo "${distro}" | cut -d_ -f3)"
-
-    mkdir -p "${OUTPUT_DIR}/${repo}/${codename}"
-
-    cp \
-        "${ROOT_DIR}/${repo%%-snapshot}/debian/changelog" \
-        "${OUTPUT_DIR}/${repo}/${codename}/"
-
-    version_revision="$(
-        dpkg-parsechangelog \
-            -l "${OUTPUT_DIR}/${repo}/${codename}/changelog" \
-            -S Version \
-        | cut -d~ -f1
-    )"
-
-    dch \
-        --force-distribution \
-        --changelog "${OUTPUT_DIR}/${repo}/${codename}/changelog" \
-        --distribution "${codename}" \
-        --newversion "${version_revision}~${ver}${codename}" \
-        "Automated build for ${codename}"
+    "${SCRIPT_DIR}/create-changelog.sh" \
+        "${OUTPUT_DIR}" \
+        ${c} \
+    2>&1
 done
 
 if [[ "${#bdeps[@]}" -eq 0 ]]; then

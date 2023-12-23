@@ -165,7 +165,7 @@ jobs:
         id: matrix
         run: ./main/.scripts/discover-build.sh ./orig ./deb ./changelogs
 
-      - name: Upload changelogs artifact
+      - name: Upload changelog artifacts
         uses: actions/upload-artifact@v3
         with:
           name: changelogs
@@ -249,6 +249,13 @@ jobs:
           name: bdeps--${{ steps.metadata.outputs.repodir }} ${{ steps.metadata.outputs.arch }}
           path: new
 
+      - name: Download changelog artifacts
+        if: ${{ matrix.build != 'placeholder' }}
+        uses: actions/download-artifact@v3
+        with:
+          name: changelogs
+          path: changelogs
+
       - name: Setup QEMU
         if: ${{ matrix.build != 'placeholder' && steps.metadata.outputs.arch == 'arm64' }}
         uses: docker/setup-qemu-action@v3
@@ -257,7 +264,7 @@ jobs:
 
       - name: Build
         if: ${{ matrix.build != 'placeholder' }}
-        run: ./main/.scripts/build.sh ./orig ./new ./output ${{ matrix.build }}
+        run: ./main/.scripts/build.sh ./orig ./new ./changelogs ./output ${{ matrix.build }}
 
       - name: Upload build artifacts
         if: ${{ matrix.build != 'placeholder' }}

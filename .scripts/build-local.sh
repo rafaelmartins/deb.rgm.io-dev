@@ -22,6 +22,49 @@ mkdir -p "${tmpdir}/orig/${REPO_NAME}"
 "${ROOT_DIR}/${REPO_NAME}/orig.sh" "${tmpdir}/orig/${REPO_NAME}"
 popd > /dev/null
 
-"${SCRIPT_DIR}/build-deps.sh" "${tmpdir}/deps" "${REPO_NAME}" "${ARCH}"
+source="$(basename "$(
+    ls \
+        -1 \
+        "${tmpdir}/orig/${REPO_NAME}/"*.orig.* \
+    | head -n1
+)")"
 
-"${SCRIPT_DIR}/build.sh" "${tmpdir}/orig" "${tmpdir}/deps" "${OUTPUT_DIR}" "${REPO_NAME}" "${DISTRO}" "${ARCH}"
+version="$(
+    echo "${source}" \
+    | sed 's/\.orig\..*$//' \
+    | cut -d_ -f2
+)"
+
+revision="$(
+    "${SCRIPT_DIR}/metadata-changelog-version-rev.sh" \
+        "${REPO_NAME}" \
+    | rev \
+    | cut -d- -f1 \
+    | rev
+)"
+if [[ -z "${revision}" ]]; then
+    revision=1
+fi
+
+"${SCRIPT_DIR}/create-changelog.sh" \
+    "${tmpdir}/changelogs" \
+    . \
+    "${REPO_NAME}" \
+    "${DISTRO}" \
+    "${version}-${revision}"
+
+if [[ "${ARCH}" != source ]]; then
+    "${SCRIPT_DIR}/build-deps.sh" \
+        "${tmpdir}/deps" \
+        "${REPO_NAME}" \
+        "${ARCH}"
+fi
+
+"${SCRIPT_DIR}/build.sh" \
+    "${tmpdir}/orig" \
+    "${tmpdir}/deps" \
+    "${tmpdir}/changelogs" \
+    "${OUTPUT_DIR}" \
+    "${REPO_NAME}" \
+    "${DISTRO}" \
+    "${ARCH}"
