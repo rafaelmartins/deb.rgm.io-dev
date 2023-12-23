@@ -31,8 +31,6 @@ debianfile="$(
 )"
 
 if [[ -f "${debianfile}" ]]; then
-    echo "reusing"
-
     tmpdir="$(mktemp -d)"
     trap 'rm -rf -- "${tmpdir}"' EXIT
 

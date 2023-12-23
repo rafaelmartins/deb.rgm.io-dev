@@ -13,9 +13,9 @@ ORIG_DIR="$(realpath "${1}")"
 DEB_DIR="$(realpath "${2}")"
 OUTPUT_DIR="$(realpath "${3}")"
 
-bdeps=()
-build=()
-changelog=()
+declare -a bdeps
+declare -a build
+declare -A changelog
 for repo in $("${SCRIPT_DIR}/metadata-repos.sh"); do
     chl_version_rev="$("${SCRIPT_DIR}/metadata-changelog-version-rev.sh" "${repo}")"
     chl_version="$("${SCRIPT_DIR}/metadata-strip-rev.sh" "${chl_version_rev}")"
@@ -34,9 +34,8 @@ for repo in $("${SCRIPT_DIR}/metadata-repos.sh"); do
                 deb_version_rev="$("${SCRIPT_DIR}/metadata-deb-version-rev.sh" "${DEB_DIR}" "${repo}" "${codename}" "${arch}")"
                 if [[ -z "${deb_version_rev}" ]] || [[ "${chl_version_rev}" != "${deb_version_rev}" ]]; then
                     build+=("${repo} ${distro} ${arch}")
-                    if [[ "${arch}" = source ]]; then
-                        changelog+=("${repo} ${distro} ${chl_version_rev}")
-                    else
+                    changelog["${repo} ${distro} ${chl_version_rev}"]=0
+                    if [[ "${arch}" != source ]]; then
                         bdeps+=("${repo} ${arch}")
                     fi
                 fi
@@ -48,9 +47,8 @@ for repo in $("${SCRIPT_DIR}/metadata-repos.sh"); do
                 orig_ss_version_rev="${orig_ss_version}-$(echo "${chl_version_rev}" | rev | cut -d- -f1 | rev)"
                 if [[ -z "${deb_version_rev}" ]] || [[ "${deb_version_rev}" != "${orig_ss_version_rev}" ]]; then
                     build+=("${repo}-snapshot ${distro} ${arch}")
-                    if [[ "${arch}" = source ]]; then
-                        changelog+=("${repo}-snapshot ${distro} ${orig_ss_version_rev}")
-                    else
+                    changelog["${repo}-snapshot ${distro} ${orig_ss_version_rev}"]=0
+                    if [[ "${arch}" != source ]]; then
                         bdeps+=("${repo} ${arch}")
                     fi
                 fi
@@ -59,11 +57,12 @@ for repo in $("${SCRIPT_DIR}/metadata-repos.sh"); do
     done
 done
 
-for c in "${changelog[@]}"; do
+for c in "${!changelog[@]}"; do
     "${SCRIPT_DIR}/create-changelog.sh" \
         "${OUTPUT_DIR}" \
+        "${DEB_DIR}" \
         ${c} \
-    2>&1
+    1>&2
 done
 
 if [[ "${#bdeps[@]}" -eq 0 ]]; then
