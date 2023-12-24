@@ -12,6 +12,10 @@ pushd "${DEB_DIR}" > /dev/null
 
 # cleanup removed repositories
 for drepo in *; do
+    if [[ ! -d "${drepo}" ]]; then
+        continue
+    fi
+
     found=
     for mrepo in $("${SCRIPT_DIR}/metadata-repos.sh"); do
         if [[ "${drepo}" = "${mrepo}" ]]; then

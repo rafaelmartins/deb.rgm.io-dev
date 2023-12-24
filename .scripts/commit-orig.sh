@@ -12,6 +12,10 @@ pushd "${ORIG_DIR}" > /dev/null
 
 # cleanup removed repositories
 for orepo in *; do
+    if [[ ! -d "${orepo}" ]]; then
+        continue
+    fi
+
     found=
     for mrepo in $("${SCRIPT_DIR}/metadata-repos.sh"); do
         if [[ "${orepo}" = "${mrepo}" ]]; then
