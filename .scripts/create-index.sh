@@ -14,40 +14,40 @@ function header() {
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <title>deb.rgm.io</title>
-  <meta name="description" content="Debian / Ubuntu repositories" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8">
+    <title>deb.rgm.io</title>
+    <meta name="description" content="Debian / Ubuntu repositories" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 
 <body>
-  <header>
-    <h1>deb.rgm.io</h1>
-    <h2>Debian / Ubuntu repositories</h2>
-  </header>
+    <header>
+        <h1>deb.rgm.io</h1>
+        <h2>Debian / Ubuntu repositories</h2>
+    </header>
 
-  <p>
-    Repositories are automatically generated using Github Actions and deployed to Github Pages.
-  </p>
+    <p>
+        Repositories are automatically generated using Github Actions and deployed to Github Pages.
+    </p>
 
-  <p>
-    To install, pick a repository and a distribution, click on the link and download the <code>.sources</code>
-    file to <code>/etc/apt/sources.list.d</code>.
-  </p>
-  <p>
-    Example for <code>blogc</code> repository:
-  </p>
-  <pre><code>$ curl "https://deb.rgm.io/blogc-\$(lsb_release -cs).sources" | sudo tee /etc/apt/sources.list.d/blogc.sources</code></pre>
+    <p>
+        To install, pick a repository and a distribution, click on the link and download the <code>.sources</code>
+        file to <code>/etc/apt/sources.list.d</code>.
+    </p>
+    <p>
+        Example for <code>blogc</code> repository:
+    </p>
+    <pre><code>$ curl "https://deb.rgm.io/blogc-\$(lsb_release -cs).sources" | sudo tee /etc/apt/sources.list.d/blogc.sources</code></pre>
 EOF
 }
 
 function footer() {
     cat <<EOF
-  <footer>
-    <p>
-      Service maintained by <a href="https://rgm.io/">Rafael G. Martins</a>.
-    </p>
-  </footer>
+    <footer>
+        <p>
+            Service maintained by <a href="https://rgm.io/">Rafael G. Martins</a>.
+        </p>
+    </footer>
 
 </body>
 
@@ -66,19 +66,23 @@ function table() {
     echo "<table border=\"1\">"
 
     for repo_name in *; do
-        echo "  <tr>"
-        echo "    <th style=\"text-align: left\">${repo_name}</th>"
+        if [[ ! -d "${repo_name}" ]]; then
+            continue
+        fi
+
+        echo "    <tr>"
+        echo "        <th style=\"text-align: left\">${repo_name}</th>"
 
         while read distro; do
             codename="$(echo "${distro}" | cut -d_ -f2)"
             if [[ -d "${repo_name}/${codename}" ]]; then
-                echo "    <td><a href=\"./${repo_name}-${codename}.sources\">$(distro_string "${distro}")</a></td>"
+                echo "        <td><a href=\"./${repo_name}-${codename}.sources\">$(distro_string "${distro}")</a></td>"
             else
-                echo "    <td>&nbsp;</td>"
+                echo "        <td>&nbsp;</td>"
             fi
         done < "${ROOT_DIR}/DISTROS"
 
-        echo "  </tr>"
+        echo "    </tr>"
     done
 
     echo "</table>"
