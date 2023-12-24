@@ -34,15 +34,19 @@ function header() {
         To install, pick a repository and a distribution, click on the link and download the <code>.sources</code>
         file to <code>/etc/apt/sources.list.d</code>.
     </p>
+
     <p>
         Example for <code>blogc</code> repository:
     </p>
+
     <pre><code>$ curl "https://deb.rgm.io/blogc-\$(lsb_release -cs).sources" | sudo tee /etc/apt/sources.list.d/blogc.sources</code></pre>
+
 EOF
 }
 
 function footer() {
     cat <<EOF
+
     <footer>
         <p>
             Service maintained by <a href="https://rgm.io/">Rafael G. Martins</a>.
@@ -63,29 +67,29 @@ function distro_string() {
 
 function table() {
     pushd "${DEB_DIR}" > /dev/null
-    echo "<table border=\"1\">"
+    echo "    <table border=\"1\">"
 
     for repo_name in *; do
         if [[ ! -d "${repo_name}" ]]; then
             continue
         fi
 
-        echo "    <tr>"
-        echo "        <th style=\"text-align: left\">${repo_name}</th>"
+        echo "        <tr>"
+        echo "            <th style=\"text-align: left\">${repo_name}</th>"
 
         while read distro; do
             codename="$(echo "${distro}" | cut -d_ -f2)"
             if [[ -d "${repo_name}/${codename}" ]]; then
-                echo "        <td><a href=\"./${repo_name}-${codename}.sources\">$(distro_string "${distro}")</a></td>"
+                echo "            <td><a href=\"./${repo_name}-${codename}.sources\">$(distro_string "${distro}")</a></td>"
             else
-                echo "        <td>&nbsp;</td>"
+                echo "            <td>&nbsp;</td>"
             fi
         done < "${ROOT_DIR}/DISTROS"
 
-        echo "    </tr>"
+        echo "        </tr>"
     done
 
-    echo "</table>"
+    echo "    </table>"
     popd > /dev/null
 }
 
