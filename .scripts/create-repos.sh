@@ -57,6 +57,10 @@ function sources_file() {
 pushd "${DEB_DIR}" > /dev/null
 
 for repo_name in *; do
+    if [[ ! -d "${repo_name}" ]]; then
+        continue
+    fi
+
     rm -rf "${REPOS_DIR}/${repo_name}"
     mkdir -p "${REPOS_DIR}/${repo_name}/conf"
 
