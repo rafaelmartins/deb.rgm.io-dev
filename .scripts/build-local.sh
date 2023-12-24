@@ -10,8 +10,10 @@ source "${SCRIPT_DIR}/utils.sh"
 SOURCE_DIR="$(realpath "${1}")"
 OUTPUT_DIR="$(realpath "${2}")"
 REPO_NAME="${3}"
-DISTRO="${4}"
+CODENAME="${4}"
 ARCH="${5}"
+
+DISTRO="$("${SCRIPT_DIR}/distro-from-codename.sh" "${CODENAME}")"
 
 tmpdir="$(mktemp -d)"
 trap 'rm -rf -- "${tmpdir}"' EXIT

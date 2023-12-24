@@ -69,14 +69,14 @@ function table() {
         echo "  <tr>"
         echo "    <th style=\"text-align: left\">${repo_name}</th>"
 
-        for distro in $("${SCRIPT_DIR}/metadata-distros.sh"); do
+        while read distro; do
             codename="$(echo "${distro}" | cut -d_ -f2)"
             if [[ -d "${repo_name}/${codename}" ]]; then
                 echo "    <td><a href=\"./${repo_name}-${codename}.sources\">$(distro_string "${distro}")</a></td>"
             else
                 echo "    <td>&nbsp;</td>"
             fi
-        done
+        done < "${ROOT_DIR}/DISTROS"
 
         echo "  </tr>"
     done

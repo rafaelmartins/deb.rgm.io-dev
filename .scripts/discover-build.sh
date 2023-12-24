@@ -22,7 +22,7 @@ for repo in $("${SCRIPT_DIR}/metadata-repos.sh"); do
     orig_version="$("${SCRIPT_DIR}/metadata-orig-version.sh" "${ORIG_DIR}" "${repo}")"
     orig_ss_version="$("${SCRIPT_DIR}/metadata-orig-version.sh" "${ORIG_DIR}" "${repo}-snapshot")"
 
-    for distro in $("${SCRIPT_DIR}/metadata-distros.sh"); do
+    while read distro; do
         codename="$(echo "${distro}" | cut -d_ -f2)"
         if ! "${SCRIPT_DIR}/metadata-build-for-codename.sh" "${repo}" "${codename}"; then
             continue
@@ -54,7 +54,7 @@ for repo in $("${SCRIPT_DIR}/metadata-repos.sh"); do
                 fi
             fi
         done
-    done
+    done < "${ROOT_DIR}/DISTROS"
 done
 
 mkdir -p "${OUTPUT_DIR}"

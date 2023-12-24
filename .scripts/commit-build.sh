@@ -32,13 +32,13 @@ for drepo in *; do
 
     for cname in *; do
         found=
-        for distro in $("${SCRIPT_DIR}/metadata-distros.sh"); do
+        while read distro; do
             codename="$(echo "${distro}" | cut -d_ -f2)"
             if [[ "${cname}" = "${codename}" ]]; then
                 found=1
                 break
             fi
-        done
+        done < "${ROOT_DIR}/DISTROS"
         if [[ -z "${found}" ]]; then
             rm -rvf "${cname}"
         fi

@@ -7,13 +7,7 @@ source "${SCRIPT_DIR}/utils.sh"
 
 CODENAME="${1}"
 
-# FIXME: sid is not versioned, detect that from json instead of hardcoding
-if [[ "x${CODENAME}" = xsid ]]; then
-    echo "debian:${CODENAME}-slim"
-    exit 0
-fi
-
-distro="$(jq -crM ".distro[] | select(contains(\"_${CODENAME}_\"))" "${ROOT_DIR}/DISTROS.json")"
+distro="$("${SCRIPT_DIR}/distro-from-codename.sh" "${CODENAME}")"
 if [[ -z "${distro}" ]]; then
     exit 1
 fi
