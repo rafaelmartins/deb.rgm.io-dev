@@ -48,6 +48,12 @@ if ls "${NEW_DIR}"/orig--* &> /dev/null; then
     popd > /dev/null
 fi
 
+cat <<EOF > "${ORIG_DIR}/README.md"
+# orig
+
+DO NOT TOUCH THIS BRANCH!
+EOF
+
 if [[ "x${CI:-}" = "xtrue" ]]; then
     pushd "${ORIG_DIR}" > /dev/null
     if [[ $(git status --porcelain=v1 | wc -l) -gt 0 ]]; then

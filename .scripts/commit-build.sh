@@ -77,6 +77,12 @@ if ls "${NEW_DIR}"/build--* &> /dev/null; then
     popd > /dev/null
 fi
 
+cat <<EOF > "${DEB_DIR}/README.md"
+# deb
+
+DO NOT TOUCH THIS BRANCH!
+EOF
+
 if [[ "x${CI:-}" = "xtrue" ]]; then
     pushd "${DEB_DIR}" > /dev/null
     if [[ $(git status --porcelain=v1 | wc -l) -gt 0 ]]; then
