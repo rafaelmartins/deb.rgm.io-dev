@@ -11,6 +11,8 @@ ls \
     -1 \
     -d \
     */debian/ \
-| cut -d/ -f1
+2> /dev/null \
+| cut -d/ -f1 \
+|| true
 
 popd > /dev/null
