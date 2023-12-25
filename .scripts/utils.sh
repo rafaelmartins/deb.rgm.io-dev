@@ -31,5 +31,7 @@ if [[ "x${CI:-}" = "xtrue" ]] && [[ -n "${DEPENDENCIES}" ]]; then
         fi
     done
 
-    sudo apt install -y ${deps[@]} 1>&2
+    if [[ "${#deps[@]}" -ne 0 ]]; then
+        sudo apt install -y ${deps[@]} 1>&2
+    fi
 fi
