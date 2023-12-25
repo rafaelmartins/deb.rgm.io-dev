@@ -13,15 +13,15 @@ if [[ ! -f  "${control}" ]]; then
     die "control file not found"
 fi
 
-full_repo="$(
+repo="$(
     grep-dctrl \
-        --show-field Vcs-Git \
+        --show-field X-GitHub-Repo \
         --no-field-names \
         "" \
         "${control}"
 )"
-if [[ -z "${full_repo}" ]]; then
+if [[ -z "${repo}" ]]; then
     die "github repository not found"
 fi
 
-echo "${full_repo}" | sed -e 's,^.*github.com[/:],,' -e 's/\.git$//'
+echo "${repo}"
