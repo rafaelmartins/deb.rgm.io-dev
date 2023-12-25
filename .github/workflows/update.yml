@@ -28,7 +28,6 @@ env:
 
 jobs:
   metadata-orig:
-    name: Discover orig metadata
     runs-on: ubuntu-22.04
 
     outputs:
@@ -53,7 +52,6 @@ jobs:
           echo "orig=${orig}" >> $GITHUB_OUTPUT
 
   orig:
-    name: Generate orig
     runs-on: ubuntu-22.04
     continue-on-error: true
     needs:
@@ -111,7 +109,6 @@ jobs:
           path: output
 
   commit-orig:
-    name: Commit orig
     runs-on: ubuntu-22.04
     needs:
       - orig
@@ -140,7 +137,6 @@ jobs:
         run: ./main/.scripts/commit-orig.sh ./orig ./new
 
   metadata-build:
-    name: Discover build metadata
     runs-on: ubuntu-22.04
     needs:
       - commit-orig
@@ -178,7 +174,6 @@ jobs:
           path: changelogs
 
   build-deps:
-    name: Generate build dependencies .deb
     runs-on: ubuntu-22.04
     continue-on-error: true
     needs:
@@ -218,7 +213,6 @@ jobs:
           path: output
 
   build:
-    name: Build
     runs-on: ubuntu-22.04
     continue-on-error: true
     needs:
@@ -282,7 +276,6 @@ jobs:
           path: output
 
   commit-build:
-    name: Commit build
     runs-on: ubuntu-22.04
     needs:
       - build
@@ -311,7 +304,6 @@ jobs:
         run: ./main/.scripts/commit-build.sh ./deb ./new
 
   create-repos:
-    name: Create repositories
     runs-on: ubuntu-22.04
     needs:
       - commit-build
@@ -345,7 +337,6 @@ jobs:
           path: ./output
 
   deploy:
-    name: Deploy
     runs-on: ubuntu-22.04
     needs:
       - create-repos
