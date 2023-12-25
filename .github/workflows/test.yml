@@ -1,0 +1,62 @@
+name: Test package
+
+on:
+  workflow_dispatch:
+    inputs:
+      source:
+        description: Source package to build.
+        type: string
+        required: true
+      codename:
+        description: Codename of Debian/Ubuntu distribution to build for.
+        type: string
+        required: true
+      arch:
+        description: Architecture to build for.
+        type: choice
+        required: true
+        default: amd64
+        options:
+          - amd64
+          - arm64
+          - source
+
+permissions: read-all
+
+concurrency:
+  group: ${{ github.workflow }}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          path: main
+
+      - name: Detect source repository
+        id: src
+        run: echo "repo=$(./main/.scripts/metadata-control-github-repo.sh "${{ inputs.source }}")" >> $GITHUB_OUTPUT
+
+      - name: Check out source repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ steps.src.outputs.repo }}
+          path: ${{ inputs.source }}
+          fetch-depth: 0
+
+      - name: Build
+        run: ./main/.scripts/build-local.sh "./${{ inputs.source }}" ./output "${{ inputs.source }}" "${{ inputs.codename }}" "${{ inputs.arch }}"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: output
