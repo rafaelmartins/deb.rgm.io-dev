@@ -87,7 +87,7 @@ cat <<EOF > "${DEB_DIR}/README.md"
 DO NOT TOUCH THIS BRANCH!
 EOF
 
-if [[ "x${CI:-}" = "xtrue" ]]; then
+if [[ "${CI:-}" = "true" ]]; then
     pushd "${DEB_DIR}" > /dev/null
     if [[ $(git status --porcelain=v1 | wc -l) -gt 0 ]]; then
         git config user.name 'github-actions[bot]'

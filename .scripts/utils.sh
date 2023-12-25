@@ -16,8 +16,20 @@ fi
 DEPENDENCIES="${DEPENDENCIES:-}"
 if [[ "x${CI:-}" = "xtrue" ]] && [[ -n "${DEPENDENCIES}" ]]; then
     export DEBIAN_FRONTEND=noninteractive
-    sudo apt update 1>&2
-    sudo apt install -y ${DEPENDENCIES} 1>&2
+
+    if [[ ! -f "${RUNNER_TEMP}/apt-updated" ]]; then
+        sudo apt update 1>&2
+        touch "${RUNNER_TEMP}/apt-updated"
+    fi
+
+    deps=()
+    for dep in ${DEPENDENCIES}; do
+        if [[ -z "$(apt list -qq --installed "${dep}")" ]]; then
+            deps+=("${dep}")
+        fi
+    done
+
+    sudo apt install -y ${deps[@]} 1>&2
 fi
 
 ROOT_DIR="$(dirname "${SCRIPT_DIR}")"
