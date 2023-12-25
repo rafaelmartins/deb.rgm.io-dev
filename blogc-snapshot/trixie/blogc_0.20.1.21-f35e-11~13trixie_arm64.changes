@@ -1,0 +1,37 @@
+Format: 1.8
+Date: Mon, 25 Dec 2023 02:45:53 +0000
+Source: blogc
+Binary: blogc blogc-git-receiver blogc-make blogc-runserver
+Architecture: arm64
+Version: 0.20.1.21-f35e-11~13trixie
+Distribution: trixie
+Urgency: medium
+Maintainer: Rafael G. Martins <rafael@rafaelmartins.eng.br>
+Changed-By: Automatic Builder (github-actions) <rafael+deb@rafaelmartins.eng.br>
+Description:
+ blogc      - Blog compiler
+ blogc-git-receiver - Blog compiler
+ blogc-make - Blog compiler
+ blogc-runserver - Blog compiler
+Changes:
+ blogc (0.20.1.21-f35e-11~13trixie) trixie; urgency=medium
+ .
+   * Automated build for trixie
+Checksums-Sha1:
+ 9cbec479fe07eb6cde84e04b8a7ac3fce3de753e 19172 blogc-git-receiver_0.20.1.21-f35e-11~13trixie_arm64.deb
+ d8f18477df68fb926b3372b8a2f822ef6214dc38 29880 blogc-make_0.20.1.21-f35e-11~13trixie_arm64.deb
+ 06c0c5eb8a35d4daaa7bae9698cb828efb41adf3 15452 blogc-runserver_0.20.1.21-f35e-11~13trixie_arm64.deb
+ 42206b8210c7b9dfade9076cbd050fe05a5e4373 6458 blogc_0.20.1.21-f35e-11~13trixie_arm64.buildinfo
+ a9117d91f0a2fb2f1f52beb34fc1e9c512c48e44 38516 blogc_0.20.1.21-f35e-11~13trixie_arm64.deb
+Checksums-Sha256:
+ 91e551429d6513c27ca19c27eedaa0043f29903d3282b2f760f2ac2e5595f4cc 19172 blogc-git-receiver_0.20.1.21-f35e-11~13trixie_arm64.deb
+ 9b613e66d2fcd52e29e7684d953fa24ceb25d4d3087f77b8cd59990120a4ad96 29880 blogc-make_0.20.1.21-f35e-11~13trixie_arm64.deb
+ 87eae6c7a81f911e17f0b024765771aeaee6d5be1763d0883fdfc3433717b136 15452 blogc-runserver_0.20.1.21-f35e-11~13trixie_arm64.deb
+ 89eb5e28b3eda16207ed34a5ff6d7ebeccafca813841060ecbdc84d27e55b05d 6458 blogc_0.20.1.21-f35e-11~13trixie_arm64.buildinfo
+ e763ef4709f892e12e59acd7a9de58ae3b0d9b52d329a4e1108e04e24e07da2d 38516 blogc_0.20.1.21-f35e-11~13trixie_arm64.deb
+Files:
+ 10d6ab6b0214533774f93d6c1a08f7e7 19172 text optional blogc-git-receiver_0.20.1.21-f35e-11~13trixie_arm64.deb
+ aa3ce85e8de750bc2bf43f1097333168 29880 text optional blogc-make_0.20.1.21-f35e-11~13trixie_arm64.deb
+ 47591bb6e1ee972c5f43fdf972d46bc1 15452 text optional blogc-runserver_0.20.1.21-f35e-11~13trixie_arm64.deb
+ a31ca58bcf2e936c96e20b50feaf6a87 6458 text optional blogc_0.20.1.21-f35e-11~13trixie_arm64.buildinfo
+ 3a23a40368b5b28e3dd589b6bcdb7332 38516 text optional blogc_0.20.1.21-f35e-11~13trixie_arm64.deb

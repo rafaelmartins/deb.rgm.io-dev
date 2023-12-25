@@ -1,0 +1,26 @@
+Format: 1.8
+Date: Sun, 24 Dec 2023 23:33:41 +0000
+Source: filebin
+Binary: filebin
+Built-For-Profiles: noudeb
+Architecture: amd64
+Version: 0.0.0.54-1b17-2~12.3mantic
+Distribution: mantic
+Urgency: medium
+Maintainer: Rafael G. Martins <rafael@rafaelmartins.eng.br>
+Changed-By: Automatic Builder (github-actions) <rafael+deb@rafaelmartins.eng.br>
+Description:
+ filebin    - A minimalistic private pastebin that can handle binary files.
+Changes:
+ filebin (0.0.0.54-1b17-2~12.3mantic) mantic; urgency=medium
+ .
+   * Automated build for mantic
+Checksums-Sha1:
+ 0b4f2e585dbe7b5cbeac27a39b25838c75dac3c9 5643 filebin_0.0.0.54-1b17-2~12.3mantic_amd64.buildinfo
+ 070fb0ea4607ff1e136bb4067ddc26e4a5f74850 5427686 filebin_0.0.0.54-1b17-2~12.3mantic_amd64.deb
+Checksums-Sha256:
+ 854e2016ebf2a2ed9f06176fcce08d533ba83cadfe08e2ed06cb68094aa981d5 5643 filebin_0.0.0.54-1b17-2~12.3mantic_amd64.buildinfo
+ 77cbe1ef444c8b6ad04847fcb076ec2b768ac1b4038aae792863df0ead7ac3e7 5427686 filebin_0.0.0.54-1b17-2~12.3mantic_amd64.deb
+Files:
+ c95149a1f8b146ac04fe3a5142f9245e 5643 web optional filebin_0.0.0.54-1b17-2~12.3mantic_amd64.buildinfo
+ 71ff27a0497df1d60037cbb721ceb082 5427686 web optional filebin_0.0.0.54-1b17-2~12.3mantic_amd64.deb

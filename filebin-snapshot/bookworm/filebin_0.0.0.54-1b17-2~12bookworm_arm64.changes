@@ -1,0 +1,25 @@
+Format: 1.8
+Date: Sun, 24 Dec 2023 23:33:39 +0000
+Source: filebin
+Binary: filebin
+Architecture: arm64
+Version: 0.0.0.54-1b17-2~12bookworm
+Distribution: bookworm
+Urgency: medium
+Maintainer: Rafael G. Martins <rafael@rafaelmartins.eng.br>
+Changed-By: Automatic Builder (github-actions) <rafael+deb@rafaelmartins.eng.br>
+Description:
+ filebin    - A minimalistic private pastebin that can handle binary files.
+Changes:
+ filebin (0.0.0.54-1b17-2~12bookworm) bookworm; urgency=medium
+ .
+   * Automated build for bookworm
+Checksums-Sha1:
+ 9d3524bce6f2a9f2ef01843eb7e08c4707d7d5e7 5113 filebin_0.0.0.54-1b17-2~12bookworm_arm64.buildinfo
+ d7d95fd49b93da3ac73bc098fdfbf38c0ea1b3d6 3957984 filebin_0.0.0.54-1b17-2~12bookworm_arm64.deb
+Checksums-Sha256:
+ 995a0f58e7c995ecce3178ca3b8a705739ee4d1b75d97c3f006189580a64b5ea 5113 filebin_0.0.0.54-1b17-2~12bookworm_arm64.buildinfo
+ f0dffe999865631a0ee84cf290f069689b25edba77a8183edeafcb9f5e0ab2ec 3957984 filebin_0.0.0.54-1b17-2~12bookworm_arm64.deb
+Files:
+ 3a3cc349dc3167cef01e5313f12edea0 5113 web optional filebin_0.0.0.54-1b17-2~12bookworm_arm64.buildinfo
+ b69c662455669be1bc789a0758b7a52d 3957984 web optional filebin_0.0.0.54-1b17-2~12bookworm_arm64.deb

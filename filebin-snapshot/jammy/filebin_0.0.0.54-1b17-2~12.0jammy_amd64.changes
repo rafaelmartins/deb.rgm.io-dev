@@ -1,0 +1,26 @@
+Format: 1.8
+Date: Sun, 24 Dec 2023 23:33:49 +0000
+Source: filebin
+Binary: filebin
+Built-For-Profiles: noudeb
+Architecture: amd64
+Version: 0.0.0.54-1b17-2~12.0jammy
+Distribution: jammy
+Urgency: medium
+Maintainer: Rafael G. Martins <rafael@rafaelmartins.eng.br>
+Changed-By: Automatic Builder (github-actions) <rafael+deb@rafaelmartins.eng.br>
+Description:
+ filebin    - A minimalistic private pastebin that can handle binary files.
+Changes:
+ filebin (0.0.0.54-1b17-2~12.0jammy) jammy; urgency=medium
+ .
+   * Automated build for jammy
+Checksums-Sha1:
+ cbdfb9b4051d4b119e384f0fc11c54f428b08a38 6108 filebin_0.0.0.54-1b17-2~12.0jammy_amd64.buildinfo
+ 76b0ba11f1c9569d14e203284926b6792a23c00a 5084374 filebin_0.0.0.54-1b17-2~12.0jammy_amd64.deb
+Checksums-Sha256:
+ 7973a251425f87338b08c481a5c97f88538f61c2abf92ef619c4f101e507d591 6108 filebin_0.0.0.54-1b17-2~12.0jammy_amd64.buildinfo
+ 977b856ff9366c3ead91caede36bbf2198320490dfdb05f67221c03a5a9ccfc0 5084374 filebin_0.0.0.54-1b17-2~12.0jammy_amd64.deb
+Files:
+ 2b54e379e5378786476a2ba39c893ccc 6108 web optional filebin_0.0.0.54-1b17-2~12.0jammy_amd64.buildinfo
+ a2c7b7d7b4e817d56d4321704a6523c3 5084374 web optional filebin_0.0.0.54-1b17-2~12.0jammy_amd64.deb

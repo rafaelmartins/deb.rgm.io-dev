@@ -1,0 +1,37 @@
+Format: 1.8
+Date: Mon, 25 Dec 2023 03:24:09 +0000
+Source: blogc
+Binary: blogc blogc-git-receiver blogc-make blogc-runserver
+Architecture: amd64
+Version: 0.20.1-13~sid
+Distribution: sid
+Urgency: medium
+Maintainer: Rafael G. Martins <rafael@rafaelmartins.eng.br>
+Changed-By: Automatic Builder (github-actions) <rafael+deb@rafaelmartins.eng.br>
+Description:
+ blogc      - Blog compiler
+ blogc-git-receiver - Blog compiler
+ blogc-make - Blog compiler
+ blogc-runserver - Blog compiler
+Changes:
+ blogc (0.20.1-13~sid) sid; urgency=medium
+ .
+   * Automated build for sid
+Checksums-Sha1:
+ c7e99b3d1bcaac02f6a2d14ef92df675dfa69ade 19464 blogc-git-receiver_0.20.1-13~sid_amd64.deb
+ d80e32bf054749e3d706717b81a30832559f7ecc 30548 blogc-make_0.20.1-13~sid_amd64.deb
+ 1d79e1794f4d7ea543b8188f4ef6cacd6856e9ab 16056 blogc-runserver_0.20.1-13~sid_amd64.deb
+ 33aff3701fe324fcadf062c6933dfda664d877c4 6299 blogc_0.20.1-13~sid_amd64.buildinfo
+ 90aa872ca84fe641f97d4031f8d86fec4b22f3f3 40232 blogc_0.20.1-13~sid_amd64.deb
+Checksums-Sha256:
+ 03c4561a70b1a5e930e598972cae28121fcff9056da981e310fd550aeb7fc0cf 19464 blogc-git-receiver_0.20.1-13~sid_amd64.deb
+ ea12baf2222e30513e0c7eeb4228f72b853242e238156f1b3dfc416f1abca5d7 30548 blogc-make_0.20.1-13~sid_amd64.deb
+ 6cb375f474d86704fb817565b532c17e899d95bc1b4f832c8404b0b3869af146 16056 blogc-runserver_0.20.1-13~sid_amd64.deb
+ c5f2fc5cc4115d00ce96b9bc6de98bf6b09f73dd58ca4099d200b404a4d4a048 6299 blogc_0.20.1-13~sid_amd64.buildinfo
+ 538f2511757868dc8c6dd9a4d713705b5fe0a8d665a1639d055ede8f5dd78d0d 40232 blogc_0.20.1-13~sid_amd64.deb
+Files:
+ 0cdf8984376bb134097fc5981849e397 19464 text optional blogc-git-receiver_0.20.1-13~sid_amd64.deb
+ 9ab8a98e4cb3f5d5814cf39aae0ccb9b 30548 text optional blogc-make_0.20.1-13~sid_amd64.deb
+ 17963b1ce53d46abf6d3df45d05ad112 16056 text optional blogc-runserver_0.20.1-13~sid_amd64.deb
+ 90d13179c7bbc611c7b71fd1656f1392 6299 text optional blogc_0.20.1-13~sid_amd64.buildinfo
+ a5be1535d133715afab70656dd20c365 40232 text optional blogc_0.20.1-13~sid_amd64.deb

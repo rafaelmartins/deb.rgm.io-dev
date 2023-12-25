@@ -1,0 +1,25 @@
+Format: 1.8
+Date: Sun, 24 Dec 2023 23:33:43 +0000
+Source: filebin
+Binary: filebin
+Architecture: amd64
+Version: 0.0.0.54-1b17-2~sid
+Distribution: sid
+Urgency: medium
+Maintainer: Rafael G. Martins <rafael@rafaelmartins.eng.br>
+Changed-By: Automatic Builder (github-actions) <rafael+deb@rafaelmartins.eng.br>
+Description:
+ filebin    - A minimalistic private pastebin that can handle binary files.
+Changes:
+ filebin (0.0.0.54-1b17-2~sid) sid; urgency=medium
+ .
+   * Automated build for sid
+Checksums-Sha1:
+ cc6b6dcb4b875d6377a04d117cc457b3470fd54d 4986 filebin_0.0.0.54-1b17-2~sid_amd64.buildinfo
+ d9034b3bc24c82c23c12aee57a1196fb6076c6df 4912908 filebin_0.0.0.54-1b17-2~sid_amd64.deb
+Checksums-Sha256:
+ 836ddd7659b304d08476eb369e756a2d7c806cddf18f09e530dac97b4f16155d 4986 filebin_0.0.0.54-1b17-2~sid_amd64.buildinfo
+ ab7e6d06174be957ad3e4455aef5a7ff8fcd365c25446f6a29eeb632c069eff9 4912908 filebin_0.0.0.54-1b17-2~sid_amd64.deb
+Files:
+ a99c930fe700046a9ae9d1c508498282 4986 web optional filebin_0.0.0.54-1b17-2~sid_amd64.buildinfo
+ 91791256ce4644af46a2e733596b8958 4912908 web optional filebin_0.0.0.54-1b17-2~sid_amd64.deb

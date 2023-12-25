@@ -1,0 +1,38 @@
+Format: 1.8
+Date: Mon, 25 Dec 2023 02:45:47 +0000
+Source: blogc
+Binary: blogc blogc-git-receiver blogc-make blogc-runserver
+Built-For-Profiles: noudeb
+Architecture: arm64
+Version: 0.20.1-11~12.3mantic
+Distribution: mantic
+Urgency: medium
+Maintainer: Rafael G. Martins <rafael@rafaelmartins.eng.br>
+Changed-By: Automatic Builder (github-actions) <rafael+deb@rafaelmartins.eng.br>
+Description:
+ blogc      - Blog compiler
+ blogc-git-receiver - Blog compiler
+ blogc-make - Blog compiler
+ blogc-runserver - Blog compiler
+Changes:
+ blogc (0.20.1-11~12.3mantic) mantic; urgency=medium
+ .
+   * Automated build for mantic
+Checksums-Sha1:
+ 859c6455b2b4daedb6882d35cc9d2a81c44955dd 20546 blogc-git-receiver_0.20.1-11~12.3mantic_arm64.deb
+ 40f14e763c63cad4d54aafcf061dd77bb57b4184 32932 blogc-make_0.20.1-11~12.3mantic_arm64.deb
+ 98ccdec4a7cf786b24ab1af730636a97186bad52 17270 blogc-runserver_0.20.1-11~12.3mantic_arm64.deb
+ 75c06e94eb8f2bc6f6c85e52eb216af669e72dab 7034 blogc_0.20.1-11~12.3mantic_arm64.buildinfo
+ 170d1fa6f62d0785dcf6a70ecf6e2f2494cf838f 41118 blogc_0.20.1-11~12.3mantic_arm64.deb
+Checksums-Sha256:
+ e61832e919213e0a625bd8e0479da14f408e929642dee8b8ee227da5a5b1a75d 20546 blogc-git-receiver_0.20.1-11~12.3mantic_arm64.deb
+ 9bb52c51afcb6f9f85d7415b35c03042f66ea185b7ea85acd7dfcf737086f62a 32932 blogc-make_0.20.1-11~12.3mantic_arm64.deb
+ 4482414a82d86a8767741fe432e7f24fd1283c09b83291d919d31982e6dad704 17270 blogc-runserver_0.20.1-11~12.3mantic_arm64.deb
+ 098aac4a611257edd942b013cc1696572adf9c67983d5f8b59d6c750ceb06cab 7034 blogc_0.20.1-11~12.3mantic_arm64.buildinfo
+ f12a065f02d7cf4c3d71d6b9bfc34d55aaa223339d14d88d0f6221175b37a954 41118 blogc_0.20.1-11~12.3mantic_arm64.deb
+Files:
+ 599359ee1bb22ef4e89e68aef12f6f31 20546 text optional blogc-git-receiver_0.20.1-11~12.3mantic_arm64.deb
+ c72a1d885e741f26015a6e5c626c36a7 32932 text optional blogc-make_0.20.1-11~12.3mantic_arm64.deb
+ e09248c88ff9765a543eb62c0c0a8412 17270 text optional blogc-runserver_0.20.1-11~12.3mantic_arm64.deb
+ 61a1ecca73395c691ce91568b33a4f25 7034 text optional blogc_0.20.1-11~12.3mantic_arm64.buildinfo
+ 5ffda094990903629d3d705bccc7d7ca 41118 text optional blogc_0.20.1-11~12.3mantic_arm64.deb

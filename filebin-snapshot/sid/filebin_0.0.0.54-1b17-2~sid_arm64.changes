@@ -1,0 +1,25 @@
+Format: 1.8
+Date: Sun, 24 Dec 2023 23:33:43 +0000
+Source: filebin
+Binary: filebin
+Architecture: arm64
+Version: 0.0.0.54-1b17-2~sid
+Distribution: sid
+Urgency: medium
+Maintainer: Rafael G. Martins <rafael@rafaelmartins.eng.br>
+Changed-By: Automatic Builder (github-actions) <rafael+deb@rafaelmartins.eng.br>
+Description:
+ filebin    - A minimalistic private pastebin that can handle binary files.
+Changes:
+ filebin (0.0.0.54-1b17-2~sid) sid; urgency=medium
+ .
+   * Automated build for sid
+Checksums-Sha1:
+ 43e66b935d2e677e16f45acdf105424ce2778da5 4956 filebin_0.0.0.54-1b17-2~sid_arm64.buildinfo
+ 38897b647d22ffe2bc0e202d2b162748828733fc 4172868 filebin_0.0.0.54-1b17-2~sid_arm64.deb
+Checksums-Sha256:
+ 47f8d4f1824dd8948464bc2e23d5e0b8dd8d9f85f2ee2049b1a8c621b0b4d2e9 4956 filebin_0.0.0.54-1b17-2~sid_arm64.buildinfo
+ 07ce837e5f9a44f269ab419de008700d9d459db40f891fd58c48eb5a2ae245b6 4172868 filebin_0.0.0.54-1b17-2~sid_arm64.deb
+Files:
+ 9be92b50bde9ad92335375d077b66195 4956 web optional filebin_0.0.0.54-1b17-2~sid_arm64.buildinfo
+ ab76176545ba047e675554b0e389b31b 4172868 web optional filebin_0.0.0.54-1b17-2~sid_arm64.deb

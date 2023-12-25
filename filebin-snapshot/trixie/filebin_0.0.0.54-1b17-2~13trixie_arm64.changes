@@ -1,0 +1,25 @@
+Format: 1.8
+Date: Sun, 24 Dec 2023 23:33:37 +0000
+Source: filebin
+Binary: filebin
+Architecture: arm64
+Version: 0.0.0.54-1b17-2~13trixie
+Distribution: trixie
+Urgency: medium
+Maintainer: Rafael G. Martins <rafael@rafaelmartins.eng.br>
+Changed-By: Automatic Builder (github-actions) <rafael+deb@rafaelmartins.eng.br>
+Description:
+ filebin    - A minimalistic private pastebin that can handle binary files.
+Changes:
+ filebin (0.0.0.54-1b17-2~13trixie) trixie; urgency=medium
+ .
+   * Automated build for trixie
+Checksums-Sha1:
+ 6068ac30ed2fd9ce8066d97a4fcdc6b7c7fc9d47 4984 filebin_0.0.0.54-1b17-2~13trixie_arm64.buildinfo
+ a3da5da2b6c05e07bbf4963773de3c763c2cfc4f 4171780 filebin_0.0.0.54-1b17-2~13trixie_arm64.deb
+Checksums-Sha256:
+ 55e44845f9df868fc3c0d07c6c590dacc42a07a4b8e31c25aa825239999c0741 4984 filebin_0.0.0.54-1b17-2~13trixie_arm64.buildinfo
+ 9cf980245af3553531e04e2b4ff6cdf29253edca04a65df340d8f5928d04ee0c 4171780 filebin_0.0.0.54-1b17-2~13trixie_arm64.deb
+Files:
+ 507bd21a19804fd4e8f3ab82821e5dd9 4984 web optional filebin_0.0.0.54-1b17-2~13trixie_arm64.buildinfo
+ 0ab057475b7a0a15e591d04e8520a4a4 4171780 web optional filebin_0.0.0.54-1b17-2~13trixie_arm64.deb

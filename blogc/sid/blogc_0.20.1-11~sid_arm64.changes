@@ -1,0 +1,37 @@
+Format: 1.8
+Date: Mon, 25 Dec 2023 02:45:51 +0000
+Source: blogc
+Binary: blogc blogc-git-receiver blogc-make blogc-runserver
+Architecture: arm64
+Version: 0.20.1-11~sid
+Distribution: sid
+Urgency: medium
+Maintainer: Rafael G. Martins <rafael@rafaelmartins.eng.br>
+Changed-By: Automatic Builder (github-actions) <rafael+deb@rafaelmartins.eng.br>
+Description:
+ blogc      - Blog compiler
+ blogc-git-receiver - Blog compiler
+ blogc-make - Blog compiler
+ blogc-runserver - Blog compiler
+Changes:
+ blogc (0.20.1-11~sid) sid; urgency=medium
+ .
+   * Automated build for sid
+Checksums-Sha1:
+ 8b0eb18d5f032f973a849dfbf3c962abc8386894 19020 blogc-git-receiver_0.20.1-11~sid_arm64.deb
+ 50e9c940585977dda401f15b1a1288755d6db8ec 29616 blogc-make_0.20.1-11~sid_arm64.deb
+ 9cba07c3408b29f96d3f0e1de6d8d5cbf002d7e1 15500 blogc-runserver_0.20.1-11~sid_arm64.deb
+ 3d560a0f47811edc5c85de2b87a5a9ae32b2b4ab 6269 blogc_0.20.1-11~sid_arm64.buildinfo
+ 0ef8979210e5778a362336d5f89c4ff295342e42 38036 blogc_0.20.1-11~sid_arm64.deb
+Checksums-Sha256:
+ 80a27c6442cab643387ed313609db423e7267fad1c8f06daf9d1b37108c27f38 19020 blogc-git-receiver_0.20.1-11~sid_arm64.deb
+ 11c1c93219ffc606ea8559ace9f65d329fecc0aea19bb34b424788123a64ebcc 29616 blogc-make_0.20.1-11~sid_arm64.deb
+ edacba1c6b37a484822b16513c3f54e42ccb4bbe04a75cf6a4b10520d9e7cf1a 15500 blogc-runserver_0.20.1-11~sid_arm64.deb
+ 9cccf4277949f058eabe51186751256845bc2003d39f26d86336e7c7b5ae1dd4 6269 blogc_0.20.1-11~sid_arm64.buildinfo
+ 4cdbe240f7eb8c0bda1559beb752cf88b2308dbd2029d94daaa3ce0c6ba2fd34 38036 blogc_0.20.1-11~sid_arm64.deb
+Files:
+ 194adb1c5754b6fc632d8c0b2746ba38 19020 text optional blogc-git-receiver_0.20.1-11~sid_arm64.deb
+ adaaf8ff964d2f7efb37eb535485c2d5 29616 text optional blogc-make_0.20.1-11~sid_arm64.deb
+ 4a4619af94b76164698b5e8659d3914a 15500 text optional blogc-runserver_0.20.1-11~sid_arm64.deb
+ 3b1e9de8ce59aa5d0a8ef31de5320596 6269 text optional blogc_0.20.1-11~sid_arm64.buildinfo
+ b115356e3e4cef765b3f343f0fcc8ef6 38036 text optional blogc_0.20.1-11~sid_arm64.deb

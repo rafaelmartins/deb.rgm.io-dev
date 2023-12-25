@@ -1,0 +1,37 @@
+Format: 1.8
+Date: Mon, 25 Dec 2023 02:45:55 +0000
+Source: blogc
+Binary: blogc blogc-git-receiver blogc-make blogc-runserver
+Architecture: arm64
+Version: 0.20.1.21-f35e-11~sid
+Distribution: sid
+Urgency: medium
+Maintainer: Rafael G. Martins <rafael@rafaelmartins.eng.br>
+Changed-By: Automatic Builder (github-actions) <rafael+deb@rafaelmartins.eng.br>
+Description:
+ blogc      - Blog compiler
+ blogc-git-receiver - Blog compiler
+ blogc-make - Blog compiler
+ blogc-runserver - Blog compiler
+Changes:
+ blogc (0.20.1.21-f35e-11~sid) sid; urgency=medium
+ .
+   * Automated build for sid
+Checksums-Sha1:
+ 80fda1e232dd0b71df8f9b7d1c1f2f8d3d6d8fd9 19192 blogc-git-receiver_0.20.1.21-f35e-11~sid_arm64.deb
+ 0090cc141146b07d4dcf3d00d2b7d1be6531fcd1 29868 blogc-make_0.20.1.21-f35e-11~sid_arm64.deb
+ d7dd1fe805469bed9648a9415aa410921c7740f2 15444 blogc-runserver_0.20.1.21-f35e-11~sid_arm64.deb
+ 697ce601aa97dc027298359faf61a98c155b9eeb 6381 blogc_0.20.1.21-f35e-11~sid_arm64.buildinfo
+ cae41348a26a64e8f553aa3ccf5928fc2fcfbc07 38520 blogc_0.20.1.21-f35e-11~sid_arm64.deb
+Checksums-Sha256:
+ f5204b8df732bc6efc0680b8745e34964219b4c7d4014454d273a2257c90fead 19192 blogc-git-receiver_0.20.1.21-f35e-11~sid_arm64.deb
+ eca981eea6f4990f227fca4087d31589bbbfd0ab9e254a03bcfbdd00a00895c4 29868 blogc-make_0.20.1.21-f35e-11~sid_arm64.deb
+ 677699fd3f24be40d31350bf56a668de3c40946eb449f6f0470ac92687f9050c 15444 blogc-runserver_0.20.1.21-f35e-11~sid_arm64.deb
+ b4212ca1e84ecec06da98c979972eec3323a21be5388349fa180bcdc051a35a6 6381 blogc_0.20.1.21-f35e-11~sid_arm64.buildinfo
+ 4d1c2de524c29e98f2bea2ddf29c0f8b416157c770fa6342e5d27050aa3fe50f 38520 blogc_0.20.1.21-f35e-11~sid_arm64.deb
+Files:
+ d0ddb85ebb24d0b72cb8e318c2990d33 19192 text optional blogc-git-receiver_0.20.1.21-f35e-11~sid_arm64.deb
+ da60f844f2d6a70b37d6ddcf5d1c3048 29868 text optional blogc-make_0.20.1.21-f35e-11~sid_arm64.deb
+ 77edcf555265816008cac8e1540d390d 15444 text optional blogc-runserver_0.20.1.21-f35e-11~sid_arm64.deb
+ c01b77c640e5d7f171ff0228e3f53619 6381 text optional blogc_0.20.1.21-f35e-11~sid_arm64.buildinfo
+ c093587a3baa5c2f03ee6bdea55b717b 38520 text optional blogc_0.20.1.21-f35e-11~sid_arm64.deb
